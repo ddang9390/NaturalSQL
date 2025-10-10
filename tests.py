@@ -16,6 +16,16 @@ BAD_SENTENCES = [
     "me show movies"
 ]
 
+# Sentences for testing the SELECT * statement
+SELECT_ALL_SENTENCES = [
+    "give me everything in the table",
+    "show me all of the movies",
+    "show me the entire table",
+    "let me see everything"
+]
+
+TEST_TABLE = "movies"
+
 class Tests(unittest.TestCase):
     def test_preprocess_success(self):
         """
@@ -53,11 +63,24 @@ class Tests(unittest.TestCase):
         print("--------------\n")
         self.assertEqual(total, len(BAD_SENTENCES))
     
-    def test_process_SELECT(self):
+    def test_process_SELECT_All(self):
         """
         Test to make sure that a SQL SELECT statement could be made 
         """
-        pass
+        print()
+        print("Testing translating sentences to SELECT * queries")
+        total = 0
+        for sentence in SELECT_ALL_SENTENCES:
+            query = process(sentence, TEST_TABLE)
+            if len(query) > 0:
+                total += 1
+                print("Translated Statement: ", query)
+            else:
+                print("PROBLEM SENTENCE: ", sentence)
+
+        print("Test complete")
+        print("--------------\n")
+        self.assertEqual(total, len(SELECT_ALL_SENTENCES))
 
 if __name__ == "__main__":
     unittest.main()

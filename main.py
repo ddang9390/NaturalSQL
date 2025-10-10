@@ -13,6 +13,9 @@ def main():
         print("Table found!")
         print("Here are the available columns:")
         print(schema[table])
+        print()
+
+        
     else:
         print("Error: table not found")
 
