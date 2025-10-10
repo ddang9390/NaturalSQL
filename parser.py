@@ -16,7 +16,7 @@ P -> "at" | "before" | "in" | "of" | "on" | "to" | "from"
 V -> "show" | "list" | "give" | "what"
 
 Col -> "name" | "year" | "genre" | "director"
-Table -> "test_movies"
+Table -> "movies"
 """
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
