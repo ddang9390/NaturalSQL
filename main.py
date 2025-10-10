@@ -1,4 +1,21 @@
 from database import *
+from parser import *
+
+def taking_question(table):
+    """
+    Taking input from user to translate it to SQL
+    """
+    while True:
+        question = input("Please ask your question or type 'quit' to exit: ")
+        if question.lower() == 'quit' or question.lower() == 'q':
+            break
+
+        query = process(question, table)
+        if query:
+            execute_query(query)
+        else:
+            print("Invalid input")
+
 
 
 def main():
@@ -14,8 +31,10 @@ def main():
         print("Here are the available columns:")
         print(schema[table])
         print()
+        taking_question(table)
+        print("Ending program")
 
-        
+
     else:
         print("Error: table not found")
 

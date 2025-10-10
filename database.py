@@ -1,4 +1,5 @@
 import sqlite3
+import pandas as pd
 
 DB_DIR = "data"
 DB_NAME = "test_movies.db"
@@ -56,4 +57,27 @@ def get_schema_info():
         
         schema[table] = column_names
 
+    con.close()
     return schema
+
+def execute_query(query):
+    """
+    Connects to database and executes the query generated from
+    translating the user's sentence. Displays the results of the
+    query and the generated query
+
+    Argument:
+        query (string): The generated query
+    """
+    con = sqlite3.connect(DB_PATH)
+
+    results = pd.read_sql_query(query, con)
+    con.close()
+
+    print("\n----Query Results----")
+    if results.empty:
+        print("The query produced no results")
+    else:
+        print(results.to_string(index=False))
+
+    print("\nResulting Query: ", query, "\n")
