@@ -3,8 +3,8 @@ import re
 import sys
 
 NONTERMINALS = """
-S -> VP NP | AllStatement | VP AllStatement
-NP -> ColList | ColList P Table
+S -> VP NP 
+NP -> ColList | ColList P Table | AllStatement
 VP -> V |  V Det
 ColList -> Col | Col Conj ColList
 
@@ -57,16 +57,10 @@ def preprocess(sentence):
     Returns:
         list: List of words in preprocessed sentence
     """
-    regex = re.compile('[a-z]')
     sent_parsing = sentence.lower()
     tokens = nltk.word_tokenize(sent_parsing)
 
-    words = []
-    for i in range(len(tokens)):
-        if regex.match(tokens[i]):
-            words.append(tokens[i])
-
-    return words
+    return tokens
 
 def find_subtree(tree, label):
     """

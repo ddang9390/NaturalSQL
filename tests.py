@@ -70,9 +70,10 @@ class Tests(unittest.TestCase):
         print()
         print("Testing translating sentences to SELECT * queries")
         total = 0
+        expected_query = f"SELECT * FROM {TEST_TABLE}"
         for sentence in SELECT_ALL_SENTENCES:
             query = process(sentence, TEST_TABLE)
-            if len(query) > 0:
+            if query == expected_query:
                 total += 1
                 print("Translated Statement: ", query)
             else:
