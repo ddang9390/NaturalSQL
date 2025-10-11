@@ -5,17 +5,27 @@ import sys
 NONTERMINALS = """
 S -> VP NP 
 NP -> ColList | ColList P Table | AllStatement
-VP -> V |  V Det
-ColList -> Col | Col Conj ColList
+VP -> V |  V Det | V Det V
+
+
+ColList ->  MainCol | MainCol Conj DetCol
+
+# Single columns or columns separated with commas
+MainCol -> DetCol | DetCol Punc MainCol | Conj DetCol
+
+# Column with words like 'the' in front of it
+DetCol -> Col | Det Col
 
 AllStatement -> All | All P Det Table | All P Table | Det All Table | VP All
 """
 
+# TODO - deal with words that look similar properly
 TERMINALS = """
 Conj -> "and" | "until"
-Det -> "a" | "an" | "me" | "my" | "the"
+Punc -> ","
+Det -> "a" | "an" | "me" | "my" | "the" | "are" 
 P -> "at" | "before" | "in" | "of" | "on" | "to" | "from"
-V -> "show" | "list" | "give" | "what" | "let" | "see"
+V -> "show" | "list" | "give" | "what" | "let" | "see" | "who" 
 
 Col -> "name" | "year" | "genre" | "director"
 Table -> "movies" | "table" | "data"
@@ -81,6 +91,23 @@ def find_subtree(tree, label):
         
     return None
 
+def extract_cols(tree):
+    """"
+    Helper function for finding columns from a sentence
+
+    Argument:
+        tree: Parse tree that reporesentsa sentence in a tree of grammar nodes
+
+    Returns:
+        list: List of columns found
+    """
+    cols = []
+    for subtree in tree.subtrees():
+        if subtree.label() == 'Col':
+            cols.append(subtree.leaves()[0])
+
+    return cols
+
 def translate_to_sql(table, trees):
     """
     Translates a natural language sentence into an SQL query for a table
@@ -95,9 +122,18 @@ def translate_to_sql(table, trees):
                 Else, a blank string
     """
     first_tree = trees[0]
-
+    
     # Starting with identifying SELECT *
     if find_subtree(first_tree, "AllStatement"):
-        return f"SELECT * FROM {table}"
+        return f"SELECT * FROM {table};"
+    
+    elif find_subtree(first_tree, "ColList"):
+        cols = extract_cols(first_tree)
+        
+        if len(cols) == 0:
+            return ""
+        
+        cols_str = ", ".join(cols)
+        return f"SELECT {cols_str} FROM {table};"
     
     return ""
