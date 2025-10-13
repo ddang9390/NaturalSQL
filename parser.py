@@ -1,6 +1,5 @@
 import nltk
-import re
-import sys
+from utils import *
 
 NONTERMINALS = """
 S -> VP NP 
@@ -19,7 +18,6 @@ DetCol -> Col | Det Col
 AllStatement -> All | All P Det Table | All P Table | Det All Table | VP All
 """
 
-# TODO - deal with words that look similar properly
 TERMINALS = """
 Conj -> "and" | "until"
 Punc -> ","
@@ -28,10 +26,22 @@ P -> "at" | "before" | "in" | "of" | "on" | "to" | "from"
 V -> "show" | "list" | "give" | "what" | "let" | "see" | "who" 
 
 Col -> "name" | "year" | "genre" | "director"
-Table -> "movies" | "table" | "data"
+Table -> "movie" | "table" | "data"
 
 All -> "everything" | "all" | "entire"
 """
+
+# For lemmatization purposes
+VALID_VOCABULARY = {
+        'V': ["show", "list", "give", "what", "let", "see", "who"],
+        'Det': ["a", "an", "me", "my", "the", "are"],
+        'P': ["at", "before", "in", "of", "on", "to", "from"],
+        'Conj': ["and", "until"],
+        'Punc': [","],
+        'Col': ["name", "year", "genre", "director"],
+        'Table': ["movie", "table", "data"],
+        'All': ["everything", "all", "entire"]
+}
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
 parser = nltk.ChartParser(grammar)
@@ -70,7 +80,9 @@ def preprocess(sentence):
     sent_parsing = sentence.lower()
     tokens = nltk.word_tokenize(sent_parsing)
 
-    return tokens
+    lemmatized_tokens = [lemmatize_word(token) for token in tokens]
+    lemmatized_tokens = resolve_tokens(lemmatized_tokens, VALID_VOCABULARY)
+    return lemmatized_tokens
 
 def find_subtree(tree, label):
     """
@@ -91,7 +103,7 @@ def find_subtree(tree, label):
         
     return None
 
-def extract_cols(tree):
+def extract_cols_from_sentence(tree):
     """"
     Helper function for finding columns from a sentence
 
@@ -104,7 +116,10 @@ def extract_cols(tree):
     cols = []
     for subtree in tree.subtrees():
         if subtree.label() == 'Col':
-            cols.append(subtree.leaves()[0])
+            word = subtree.leaves()[0]
+            best_match = find_best_match(word, VALID_VOCABULARY["Col"])
+            if best_match:
+                cols.append(subtree.leaves()[0])
 
     return cols
 
@@ -128,7 +143,7 @@ def translate_to_sql(table, trees):
         return f"SELECT * FROM {table};"
     
     elif find_subtree(first_tree, "ColList"):
-        cols = extract_cols(first_tree)
+        cols = extract_cols_from_sentence(first_tree)
         
         if len(cols) == 0:
             return ""

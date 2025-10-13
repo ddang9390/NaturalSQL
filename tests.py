@@ -4,7 +4,6 @@ from parser import preprocess, process
 TEST_TABLE = "movies"
 
 # Sentences that should parse correctly
-# TODO - sentences must include more specific names later on
 GOOD_SENTENCES = [
     "show me the name of movies",
     "list the name and genre from movies",
@@ -12,6 +11,7 @@ GOOD_SENTENCES = [
 ]
 
 # Sentences that should fail to parse
+# TODO - make actual bad sentences
 BAD_SENTENCES = [
     "i eat",
     "show show show",
@@ -31,8 +31,19 @@ SELECT_FROM_COLUMNS_SENTENCES = {
     "list the director and genre": f"SELECT director, genre FROM {TEST_TABLE};",
     "who are the director": f"SELECT director FROM {TEST_TABLE};",
     "show me the year": f"SELECT year FROM {TEST_TABLE};",
-    "give me the name, director, and genre": f"SELECT name, director, genre FROM {TEST_TABLE};"
+    "give me the name, director, and genre": f"SELECT name, director, genre FROM {TEST_TABLE};",
+    "show me the names of movies": f"SELECT name FROM {TEST_TABLE};",
 }
+
+SIMILAR_SOUNDING_SENTENCES = {
+    "shw me the nam of movies": f"SELECT name FROM {TEST_TABLE};",
+    "lst the director and gere": f"SELECT director, genre FROM {TEST_TABLE};",
+    "who are the directors": f"SELECT director FROM {TEST_TABLE};",
+    "show me the years": f"SELECT year FROM {TEST_TABLE};",
+    "give me the names, directors, and genres": f"SELECT name, director, genre FROM {TEST_TABLE};",
+    "show me the names of movies": f"SELECT name FROM {TEST_TABLE};",
+}
+    
 
 
 class Tests(unittest.TestCase):
@@ -116,6 +127,32 @@ class Tests(unittest.TestCase):
         print("Test complete")
         print("--------------\n")
         self.assertEqual(total, len(SELECT_FROM_COLUMNS_SENTENCES))
+
+    def test_process_similar_sentences(self):
+        """
+        Test to make sure that sentences with similar words that are not the exact words
+        could be processed and translated properly
+        """
+        print()
+        print("Testing translating sentences with similar words")
+        total = 0
+
+        for sentence in SIMILAR_SOUNDING_SENTENCES.keys():
+            expected_query = SIMILAR_SOUNDING_SENTENCES[sentence]
+            query = process(sentence, TEST_TABLE)
+            if query == expected_query:
+                total += 1
+                print("Translated Statement: ", query)
+            else:
+                print("Expected:", expected_query)
+                print("Actual:", query)
+                print("PROBLEM SENTENCE: ", sentence)
+                print()
+                
+        print("Test complete")
+        print("--------------\n")
+        self.assertEqual(total, len(SIMILAR_SOUNDING_SENTENCES))
+
 
 if __name__ == "__main__":
     unittest.main()
