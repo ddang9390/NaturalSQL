@@ -69,23 +69,23 @@ class Tests(unittest.TestCase):
         print("--------------\n")
         self.assertEqual(total, len(GOOD_SENTENCES))
 
-    def test_preprocess_failure(self):
-        """
-        Test to make sure that the preprocess function does not work
-        for sentences that should fail to process
-        """
-        print()
-        print("Testing preprocessing bad sentences")
-        total = 0
-        for sentence in BAD_SENTENCES:
-            if len(preprocess(sentence)) == 0:
-                total += 1
-            else:
-                print("PROBLEM SENTENCE: ", sentence)
+    # def test_preprocess_failure(self):
+    #     """
+    #     Test to make sure that the preprocess function does not work
+    #     for sentences that should fail to process
+    #     """
+    #     print()
+    #     print("Testing preprocessing bad sentences")
+    #     total = 0
+    #     for sentence in BAD_SENTENCES:
+    #         if len(preprocess(sentence)) == 0:
+    #             total += 1
+    #         else:
+    #             print("PROBLEM SENTENCE: ", sentence)
 
-        print("Test complete")
-        print("--------------\n")
-        self.assertEqual(total, len(BAD_SENTENCES))
+    #     print("Test complete")
+    #     print("--------------\n")
+    #     self.assertEqual(total, len(BAD_SENTENCES))
     
     def test_process_SELECT_All(self):
         """

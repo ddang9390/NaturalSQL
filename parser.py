@@ -161,7 +161,7 @@ def extract_cols_from_sentence(tree):
             word = subtree.leaves()[0]
             best_match = find_best_match(word, VALID_VOCABULARY["Col"])
             if best_match:
-                cols.append(subtree.leaves()[0])
+                cols.append(best_match)
 
     return cols
 
@@ -188,7 +188,12 @@ def translate_to_sql(table, trees, unknown_words):
         return f"SELECT * FROM {table};"
     
     elif find_subtree(first_tree, "ColList"):
-        cols = list(set(extract_cols_from_sentence(first_tree)))
+        cols = []
+        existing = set()
+        for col in extract_cols_from_sentence(first_tree):
+            if col not in existing:
+                existing.add(col)
+                cols.append(col)
  
         if len(cols) == 0:
             return ""
