@@ -1,5 +1,4 @@
 import nltk
-nltk.download('wordnet')
 from fuzzywuzzy import fuzz
 from nltk.stem import WordNetLemmatizer
 
@@ -15,11 +14,11 @@ def find_best_match(word, valid_words):
     similarity between two inputs.
 
     Arguments:
-        word (String): The word that we are looking the best matching word for
+        word (string): The word that we are looking the best matching word for
         valid_words (list): List of valid words
 
     Returns:
-        String: The word that closely resembles the inputted word
+        string: The word that closely resembles the inputted word
     """
     best_match = None
     best_score = SIMILARITY_THRESHOLD
@@ -39,10 +38,10 @@ def lemmatize_word(word):
     outside of this file
 
     Argument:
-        word (String): Word to lemmatize
+        word (string): Word to lemmatize
     
     Returns:
-        String: Word converted to singular form
+        string: Word converted to singular form
     """
     lemmatizer = WordNetLemmatizer()
     return lemmatizer.lemmatize(word)
@@ -50,7 +49,6 @@ def lemmatize_word(word):
 def resolve_tokens(tokens, valid_vocabulary):
     """
     Takes a list of user tokens and resolves them against a known vocabulary.
-    Uses fuzzy matching for words that might be columns.
 
     Args:
         tokens (list): A list of words from the user.
@@ -60,7 +58,7 @@ def resolve_tokens(tokens, valid_vocabulary):
         list: A new list of tokens where words have been corrected.
     """
     resolved_tokens = []
-    
+
     # Convert valid vocabulary dictionary to single set for use in find_best_match function
     known_grammar_words = set(
         valid_vocabulary.get('V', []) + 
@@ -68,9 +66,11 @@ def resolve_tokens(tokens, valid_vocabulary):
         valid_vocabulary.get('P', []) + 
         valid_vocabulary.get('Conj', []) +
         valid_vocabulary.get('Punc', []) +
-        valid_vocabulary.get('All', []) +
         valid_vocabulary.get('Col', []) +
-        valid_vocabulary.get('Table', [])
+        valid_vocabulary.get('Table', []) +
+        valid_vocabulary.get('All', []) +
+        valid_vocabulary.get('Filter', []) +
+        valid_vocabulary.get('ValPlaceholder', [])
     )
 
     for token in tokens:

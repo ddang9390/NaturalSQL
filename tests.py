@@ -44,6 +44,10 @@ SIMILAR_SOUNDING_SENTENCES = {
     "show me the names of movies": f"SELECT name FROM {TEST_TABLE};",
 }
     
+WHERE_SENTENCES = {
+    "show me the name of movies where name is Shrek": f"SELECT name FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
+    "show me the name of movies where the name is shrek": f"SELECT name FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
+}
 
 
 class Tests(unittest.TestCase):
@@ -152,6 +156,30 @@ class Tests(unittest.TestCase):
         print("Test complete")
         print("--------------\n")
         self.assertEqual(total, len(SIMILAR_SOUNDING_SENTENCES))
+
+    def test_process_WHERE_clause(self):
+        """
+        Test to make sure that a WHERE clause could be made
+        """
+        print()
+        print("Testing generating queries with WHERE clause")
+        total = 0
+
+        for sentence in WHERE_SENTENCES.keys():
+            expected_query = WHERE_SENTENCES[sentence]
+            query = process(sentence, TEST_TABLE)
+            if query == expected_query:
+                total += 1
+                print("Translated Statement: ", query)
+            else:
+                print("Expected:", expected_query)
+                print("Actual:", query)
+                print("PROBLEM SENTENCE: ", sentence)
+                print()
+                
+        print("Test complete")
+        print("--------------\n")
+        self.assertEqual(total, len(WHERE_SENTENCES))
 
 
 if __name__ == "__main__":
