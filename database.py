@@ -70,7 +70,7 @@ def execute_query(query):
         query (string): The generated query
     """
     con = sqlite3.connect(DB_PATH)
-
+    print(DB_PATH)
     results = pd.read_sql_query(query, con)
     con.close()
 
@@ -81,6 +81,25 @@ def execute_query(query):
         print(results.to_string(index=False))
 
     print("\nResulting Query: ", query, "\n")
+
+def get_column_and_tablenames():
+    """
+    Retrieve the names of all tables and columns from the database
+
+    Returns:
+        column_names (list): List of all column names
+        table_names (list): List of all table names
+    """
+    schema = get_schema_info()
+    column_names = set()
+    table_names = set(schema.keys())
+
+    for table in schema.items():
+        for col in table[1]:
+            column_names.add(col)
+
+    return list(column_names), list(table_names)
+
 
 def get_column_types(table):
     """
@@ -117,3 +136,4 @@ def column_is_number(column_type):
     """
     numeric_types = ["INTEGER", "REAL", "NUMERIC", "FLOAT", "DOUBLE"]
     return column_type.upper() in numeric_types
+

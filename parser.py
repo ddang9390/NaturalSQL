@@ -3,10 +3,9 @@ from utils import *
 from database import *
 
 NONTERMINALS = """
-S -> VP NP | VP NP FilterClause | FilterClause
+S -> VP NP | VP NP FilterClause | FilterClause | AllStatement
 NP -> ColList | ColList P Table | AllStatement
 VP -> V |  V Det | V Det V
-
 
 ColList ->  MainCol | MainCol Conj DetCol
 
@@ -16,7 +15,7 @@ MainCol -> DetCol | DetCol Punc MainCol | Conj DetCol
 # Column with words like 'the' in front of it
 DetCol -> Col | Det Col
 
-AllStatement -> All | All P Det Table | All P Table | Det All Table | VP All
+AllStatement -> All | All P Det Table | All P Table | Det All Table | VP All | V Det Table | VP All P Det Table | VP Det All Table
 
 FilterClause -> Filter | Filter NP | Filter DetCol IsVal
 IsVal -> V ValPlaceholder
@@ -28,9 +27,6 @@ Punc -> ","
 Det -> "a" | "an" | "me" | "my" | "the" | "are" 
 P -> "at" | "before" | "in" | "of" | "on" | "to" | "from"
 V -> "show" | "list" | "give" | "what" | "let" | "see" | "who" | "is"
-
-Col -> "name" | "year" | "genre" | "director"
-Table -> "movie" | "table" | "data"
 
 All -> "everything" | "all" | "entire"
 Filter -> "where" | "with" | "for"
@@ -45,18 +41,36 @@ VALID_VOCABULARY = {
         'P': ["at", "before", "in", "of", "on", "to", "from"],
         'Conj': ["and", "until"],
         'Punc': [","],
-        'Col': ["name", "year", "genre", "director"],
-        'Table': ["movie", "table", "data"],
+
         'All': ["everything", "all", "entire"],
         'Filter' : ["where", "with", "for"],
         'ValPlaceholder' : ["__value__"],
 }
 
 
-grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
-parser = nltk.ChartParser(grammar)
 
-def process(sentence, table):
+def init_parser():
+    """
+    Initiates the parser so that it can handle our current static grammar
+    along with dynamic table and column names
+
+    Returns:
+        grammar
+        parser
+    """
+    column_names, table_names = get_column_and_tablenames()
+
+    col_rules = "Col -> " + " | ".join(f'"{col}"' for col in column_names) + "\n"
+    table_rules = "Table -> " + " | ".join(f'"{table}"' for table in table_names) + ' | "table" | "data"\n'
+
+    true_terminals = TERMINALS + "\n" + col_rules + "\n" + table_rules
+
+    grammar = nltk.CFG.fromstring(NONTERMINALS + true_terminals)
+    parser = nltk.ChartParser(grammar)
+
+    return parser
+
+def process(sentence, table=""):
     """
     Take a sentence and processes it to be able to be
     translated into an SQL query
@@ -70,8 +84,10 @@ def process(sentence, table):
                 or an empty string if the sentence could not be 
                 parsed or translated properly
     """
+    parser = init_parser()
+
     # Convert input into list of words
-    s, unknown_words = preprocess(sentence)
+    s, unknown_words, true_vocab = preprocess(sentence)
 
     # Attempt to parse sentence
     try:
@@ -84,7 +100,7 @@ def process(sentence, table):
         print("Could not parse sentence.")
         return ""
 
-    return translate_to_sql(table, trees, unknown_words)
+    return translate_to_sql(trees, unknown_words, true_vocab, table)
 
 
 
@@ -105,17 +121,20 @@ def preprocess(sentence):
     sent_parsing = sentence.lower()
     tokens = nltk.word_tokenize(sent_parsing)
 
+    column_names, table_names = get_column_and_tablenames()
+    true_vocab = VALID_VOCABULARY.copy()
+    true_vocab["Table"] = table_names
+    true_vocab["Col"] = column_names
+    true_vocab["Table"].extend(["table", "data"])
+
     # Converting unknown words
     known_words = set()
-    for valid in VALID_VOCABULARY.values():
+    for valid in true_vocab.values():
         known_words.update(valid)
 
-    
-
     lemmatized_tokens = [lemmatize_word(token) for token in tokens]
-    resolved_tokens = resolve_tokens(lemmatized_tokens, VALID_VOCABULARY)
+    resolved_tokens = resolve_tokens(lemmatized_tokens, true_vocab)
 
-    
     processed_tokens = []
     unknown_words = []
     for token in resolved_tokens:
@@ -125,7 +144,7 @@ def preprocess(sentence):
             processed_tokens.append("__value__")
             unknown_words.append(token)
 
-    return processed_tokens, unknown_words
+    return processed_tokens, unknown_words, true_vocab
 
 def find_subtree(tree, label):
     """
@@ -146,7 +165,7 @@ def find_subtree(tree, label):
         
     return None
 
-def extract_cols_from_sentence(tree):
+def extract_cols_from_sentence(tree, true_vocab):
     """"
     Helper function for finding columns from a sentence
 
@@ -160,19 +179,21 @@ def extract_cols_from_sentence(tree):
     for subtree in tree.subtrees():
         if subtree.label() == 'Col':
             word = subtree.leaves()[0]
-            best_match = find_best_match(word, VALID_VOCABULARY["Col"])
+            best_match = find_best_match(word, true_vocab["Col"])
             if best_match:
                 cols.append(best_match)
 
     return cols
 
+def extract_table_from_sentence(tree):
+    table = find_subtree(tree, "Table").leaves()[0]
+    return table
 
-def translate_to_sql(table, trees, unknown_words):
+def translate_to_sql(trees, unknown_words, true_vocab, table=""):
     """
     Translates a natural language sentence into an SQL query for a table
 
     Arguments:
-        table (string): Name of the table being queried
         trees (list): List of parse trees which represents a sentence in a 
                       tree of grammar nodes
         unknown_words (list): List of words that may be names of values for
@@ -183,6 +204,9 @@ def translate_to_sql(table, trees, unknown_words):
                 Else, a blank string
     """
     first_tree = trees[0]
+
+    if table == "":
+        table = extract_table_from_sentence(first_tree)
     where = build_filter_clause(first_tree, unknown_words, table)
     # Starting with identifying SELECT *
     if find_subtree(first_tree, "AllStatement"):
@@ -191,7 +215,7 @@ def translate_to_sql(table, trees, unknown_words):
     elif find_subtree(first_tree, "ColList"):
         cols = []
         existing = set()
-        for col in extract_cols_from_sentence(first_tree):
+        for col in extract_cols_from_sentence(first_tree, true_vocab):
             if col not in existing:
                 existing.add(col)
                 cols.append(col)

@@ -83,5 +83,5 @@ def resolve_tokens(tokens, valid_vocabulary):
                 resolved_tokens.append(best_match)
             else:
                 resolved_tokens.append(token)
-                
+    
     return resolved_tokens
