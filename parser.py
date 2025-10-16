@@ -1,5 +1,6 @@
 import nltk
 from utils import *
+from database import *
 
 NONTERMINALS = """
 S -> VP NP | VP NP FilterClause | FilterClause
@@ -182,10 +183,10 @@ def translate_to_sql(table, trees, unknown_words):
                 Else, a blank string
     """
     first_tree = trees[0]
-    
+    where = build_filter_clause(first_tree, unknown_words, table)
     # Starting with identifying SELECT *
     if find_subtree(first_tree, "AllStatement"):
-        return f"SELECT * FROM {table};"
+        return f"SELECT * FROM {table}{where};"
     
     elif find_subtree(first_tree, "ColList"):
         cols = []
@@ -198,34 +199,35 @@ def translate_to_sql(table, trees, unknown_words):
         if len(cols) == 0:
             return ""
         
-        # Identifies WHERE clause
-        filter_node = find_subtree(first_tree, "FilterClause")
-        where = ""
-        if filter_node:
-            where = build_filter_clause(filter_node, unknown_words)
-
         cols_str = ", ".join(cols)
         return f"SELECT {cols_str} FROM {table}{where};"
     
     return ""
 
-def build_filter_clause(tree, unknown_words):
+def build_filter_clause(tree, unknown_words, table):
     """
     Builds the WHERE and FOR clauses for the translated
     SQL query
 
-    Argument:
-        tree: Parse tree that reporesentsa sentence in a tree of grammar nodes
-        unknown_wards (list): List of unknown words
+    tree: Parse tree that reporesents a sentence in a tree of grammar nodes
+        unknown_words (list): List of unknown words
 
     Returns:
         where_clause (string): WHERE clause for the SQL query
     """
-    where_clause = ""
-    if find_subtree(tree, "Filter"):
-        det_col_tree = find_subtree(tree, "DetCol")
-        col = find_subtree(det_col_tree, "Col")
-        where_clause = " WHERE LOWER(" + col.leaves()[0] + ") = '" + unknown_words[0] + "'"
-            
+    filter_node = find_subtree(tree, "FilterClause")
+    where = ""
+    if filter_node:
+        if find_subtree(filter_node, "Filter"):
+            det_col_tree = find_subtree(tree, "DetCol")
+            col = find_subtree(det_col_tree, "Col")
 
-    return where_clause
+            column_info = get_column_types(table)
+
+            if column_is_number(column_info[col.leaves()[0]]):
+                where = " WHERE " + col.leaves()[0] + " = " + unknown_words[0]
+            else:
+                where = " WHERE LOWER(" + col.leaves()[0] + ") = '" + unknown_words[0] + "'"
+
+    return where
+

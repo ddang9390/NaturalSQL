@@ -81,3 +81,39 @@ def execute_query(query):
         print(results.to_string(index=False))
 
     print("\nResulting Query: ", query, "\n")
+
+def get_column_types(table):
+    """
+    Retrieves the types of the columns in the table
+
+    Argument:
+        table (String): name of the table
+
+    Returns:
+        dict: Dictionary mapping column names to their types
+    """
+    con = sqlite3.connect(DB_PATH)
+    cur = con.cursor()
+
+    column_types = {}
+
+    cur.execute(f"PRAGMA table_info({table})")
+    column_info = cur.fetchall()
+    for col_info in column_info:
+        column_types[col_info[1]] = col_info[2].upper()
+
+    con.close()
+    return column_types
+
+def column_is_number(column_type):
+    """
+    Determines if the column is numeric or not
+
+    Argument:
+        column_type (String): Name of the column's type
+
+    Returns:
+        bool: True if numeric, False if not
+    """
+    numeric_types = ["INTEGER", "REAL", "NUMERIC", "FLOAT", "DOUBLE"]
+    return column_type.upper() in numeric_types
