@@ -1,7 +1,7 @@
 from database import *
 from parser import *
 
-def taking_question(table):
+def taking_question():
     """
     Taking input from user to translate it to SQL
     """
@@ -10,7 +10,7 @@ def taking_question(table):
         if question.lower() == 'quit' or question.lower() == 'q':
             break
 
-        query = process(question, table)
+        query = process(question)
         if query:
             execute_query(query)
         else:
@@ -24,19 +24,21 @@ def main():
     print("---------------")
     print("--".join(key for key in schema.keys()))
 
-    table = input("Please enter the name of the table you wish to query: ")
-    print()
-    if table in schema.keys():
-        print("Table found!")
-        print("Here are the available columns:")
-        print(schema[table])
-        print()
-        taking_question(table)
-        print("Ending program")
+    # table = input("Please enter the name of the table you wish to query: ")
+    # print()
+    # if table in schema.keys():
+    #     print("Table found!")
+    #     print("Here are the available columns:")
+    #     print(schema[table])
+    #     print()
+    #     taking_question(table)
+    #     print("Ending program")
+    taking_question()
+    print("Ending program")
+    
 
-
-    else:
-        print("Error: table not found")
+    # else:
+    #     print("Error: table not found")
 
 if __name__ == "__main__":
     main()

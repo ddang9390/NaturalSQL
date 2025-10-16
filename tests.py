@@ -20,6 +20,7 @@ BAD_SENTENCES = [
 
 # Sentences for testing the SELECT * statement
 SELECT_ALL_SENTENCES = [
+    "Show the movies",
     "give me everything in the table",
     "show me all of the movies",
     "show me the entire table",
