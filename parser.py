@@ -3,7 +3,7 @@ from utils import *
 from database import *
 
 NONTERMINALS = """
-S -> VP NP | VP NP FilterClause | FilterClause
+S -> VP NP | VP NP FilterClause | FilterClause | AllStatement
 NP -> ColList | ColList P Table | AllStatement
 VP -> V |  V Det | V Det V
 
@@ -125,6 +125,7 @@ def preprocess(sentence):
     true_vocab = VALID_VOCABULARY.copy()
     true_vocab["Table"] = table_names
     true_vocab["Col"] = column_names
+    true_vocab["Table"].extend(["table", "data"])
 
     # Converting unknown words
     known_words = set()
@@ -143,8 +144,6 @@ def preprocess(sentence):
             processed_tokens.append("__value__")
             unknown_words.append(token)
 
-    print(resolved_tokens)
-    print(processed_tokens)
     return processed_tokens, unknown_words, true_vocab
 
 def find_subtree(tree, label):
