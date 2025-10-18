@@ -82,6 +82,8 @@ def execute_query(query):
 
     print("\nResulting Query: ", query, "\n")
 
+    return query, results.to_html()
+
 def get_column_and_tablenames():
     """
     Retrieve the names of all tables and columns from the database

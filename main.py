@@ -1,5 +1,6 @@
 from database import *
 from parser import *
+from GUI.main_ui import *
 
 def taking_question():
     """
@@ -24,21 +25,10 @@ def main():
     print("---------------")
     print("--".join(key for key in schema.keys()))
 
-    # table = input("Please enter the name of the table you wish to query: ")
-    # print()
-    # if table in schema.keys():
-    #     print("Table found!")
-    #     print("Here are the available columns:")
-    #     print(schema[table])
-    #     print()
-    #     taking_question(table)
-    #     print("Ending program")
-    taking_question()
+    #taking_question()
+    run_ui()
     print("Ending program")
-    
 
-    # else:
-    #     print("Error: table not found")
 
 if __name__ == "__main__":
     main()

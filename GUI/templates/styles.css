@@ -1,0 +1,14 @@
+body {
+    margin: 50px auto;
+    padding: 20px;
+}
+
+input {
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 16px;
+}
