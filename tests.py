@@ -46,10 +46,14 @@ SIMILAR_SOUNDING_SENTENCES = {
 }
     
 WHERE_SENTENCES = {
-    "show me the name of movies where name is Shrek": f"SELECT name FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
-    "show me the name of movies where the name is shrek": f"SELECT name FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
-    "show me all of movies where the name is shrek": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
-    "show me all of movies where the year is 2008": f"SELECT * FROM {TEST_TABLE} WHERE year = 2008;"
+    "show me the name of movies where name is \"Shrek\"": f"SELECT name FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
+    "show me the name of movies where name is \"The Dark Knight Rises\"": f"SELECT name FROM {TEST_TABLE} WHERE LOWER(name) = 'the dark knight rises';",
+    "show me the name of movies where the name is \"shrek\"": f"SELECT name FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
+    "show me all of movies where the name is \"shrek\"": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
+    "show me all of movies where the year is 2008": f"SELECT * FROM {TEST_TABLE} WHERE year = 2008;",
+
+    # Handling SELECT * with WHERE clause
+    "show me the movie where the name is \"Shrek\"": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
 }
 
 

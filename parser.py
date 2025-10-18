@@ -1,4 +1,5 @@
 import nltk
+import re
 from utils import *
 from database import *
 
@@ -102,7 +103,26 @@ def process(sentence, table=""):
 
     return translate_to_sql(trees, unknown_words, true_vocab, table)
 
+def extract_search_value(sentence):
+    """
+    Extract search value from user input which should
+    be in quotation marks
 
+    Argument:
+        sentence (string): A sentence written in natural language
+
+    Returns:
+        processed_sentence (string): Sentence with search value replaced with placeholder
+        unknown_words (list): List of unknown words
+    """
+    unknown_words = re.findall(r'"(.+?)"', sentence)
+    pattern = r'["\']([^"\']+)["\']'
+    processed_sentence = re.sub(pattern, "__value__", sentence)
+
+    print(unknown_words)
+    print(sentence)
+    print(processed_sentence)
+    return processed_sentence, unknown_words
 
 def preprocess(sentence):
     """
@@ -118,7 +138,8 @@ def preprocess(sentence):
         processed_tokens (list): List of words in preprocessed sentence
         unknown_words (list): List of unknown words
     """
-    sent_parsing = sentence.lower()
+    sent_parsing, unknown_words = extract_search_value(sentence.lower())
+    # sent_parsing = sentence.lower()
     tokens = nltk.word_tokenize(sent_parsing)
 
     column_names, table_names = get_column_and_tablenames()
@@ -134,9 +155,9 @@ def preprocess(sentence):
 
     lemmatized_tokens = [lemmatize_word(token) for token in tokens]
     resolved_tokens = resolve_tokens(lemmatized_tokens, true_vocab)
-
+    
     processed_tokens = []
-    unknown_words = []
+
     for token in resolved_tokens:
         if token in known_words:
             processed_tokens.append(token)
@@ -146,6 +167,17 @@ def preprocess(sentence):
 
     return processed_tokens, unknown_words, true_vocab
 
+
+
+
+
+
+
+
+
+
+
+#TODO - separate into separate translator file
 def find_subtree(tree, label):
     """
     Helper function for finding subtrees with given label
@@ -251,7 +283,7 @@ def build_filter_clause(tree, unknown_words, table):
             if column_is_number(column_info[col.leaves()[0]]):
                 where = " WHERE " + col.leaves()[0] + " = " + unknown_words[0]
             else:
-                where = " WHERE LOWER(" + col.leaves()[0] + ") = '" + unknown_words[0] + "'"
+                where = " WHERE LOWER(" + col.leaves()[0] + ") = '" + " ".join(unknown_words) + "'"
 
     return where
 
