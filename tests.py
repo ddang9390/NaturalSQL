@@ -56,7 +56,14 @@ WHERE_SENTENCES = {
 
     # Handling SELECT * with WHERE clause
     "show me the movies where the name is \"Shrek\"": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
+
+    # Handling more complex clauses with AND/OR
+    "show me movies where director is \"Christopher Nolan\" and year is 2010": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(director) = 'christopher nolan' AND year = 2010;",
+    "show me movies where director is \"Christopher Nolan\" or director is \"Steven Spielberg\"": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(director) = 'christopher nolan' OR LOWER(director) = 'steven spielberg';",
+    
+    
 }
+
 
 
 class Tests(unittest.TestCase):

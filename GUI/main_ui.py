@@ -12,8 +12,11 @@ def run_ui():
 def index():
     return render_template('index.html')
 
-@app.route("/query", methods=["POST"])
+@app.route("/query", methods=["GET", "POST"])
 def taking_question():
+    if request.method == "GET":
+        return redirect(url_for('index'))
+
     user_input = request.form.get('user_input')
     sql_results = ""
     query = ""

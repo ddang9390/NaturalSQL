@@ -13,6 +13,12 @@
                 value="{{user_input}}" id="user_input" name="user_input" required>
             <button class="btn btn-primary">Submit</button>
         </form>
+
+        <div class="help-text">
+            <strong>💡 Tip:</strong> Use quotes for search values with multiple words<br>
+            <span class="example">Example: where name is "The Dark Knight"</span>
+        </div>
+
         <div class="example-queries">
             <h3>Try these examples:</h3>
             <ul>
@@ -48,8 +54,6 @@
     <script>
         function fillExample(query) {
             document.getElementById('user_input').value = query;
-
         }
-
     </script>
 </body>

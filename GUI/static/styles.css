@@ -91,6 +91,8 @@ button:hover {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 .sql-results-display th {
@@ -108,6 +110,26 @@ button:hover {
 .sql-results-display tr:hover {
     background-color: #f5f5f5;
 }
+
+/* Style the scrollbar */
+.table-wrapper::-webkit-scrollbar {
+    width: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 6px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 
 h3 {
     color: #333;
@@ -141,4 +163,15 @@ h3 {
 
 .example-queries li:hover {
     color: #667eea;
+}
+
+/* Help text styling */
+.help-text {
+    margin-top: 12px;
+    padding: 12px;
+    background-color: #f0f7ff;
+    border-left: 4px solid #2196F3;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #555;
 }

@@ -4,7 +4,7 @@ from utils import *
 from database import *
 
 NONTERMINALS = """
-S -> VP NP | VP NP FilterClause | FilterClause | AllStatement
+S -> VP NP | VP NP FilterStatement | FilterStatement | AllStatement
 NP -> ColList | ColList P TableRef | AllStatement | TableRef 
 VP -> V |  V Det | V Det V
 
@@ -21,12 +21,13 @@ TableRef -> Table | Det Table
 
 AllStatement -> All | All P Det TableRef | All P TableRef | Det All TableRef | VP All | V Det Table | VP All P Det Table | VP Det All Table | Det Table
 
-FilterClause -> Filter | Filter NP | Filter DetCol IsVal
+FilterStatement -> FilterClause | FilterClause Conj FilterClause 
+FilterClause -> Filter | Filter NP | Filter DetCol IsVal | DetCol IsVal
 IsVal -> V ValPlaceholder
 """
 
 TERMINALS = """
-Conj -> "and" | "until"
+Conj -> "and" | "until" | "or"
 Punc -> ","
 Det -> "a" | "an" | "me" | "my" | "the" | "are" 
 P -> "at" | "before" | "in" | "of" | "on" | "to" | "from"
@@ -122,7 +123,7 @@ def extract_search_value(sentence):
     pattern = r'["\']([^"\']+)["\']'
     processed_sentence = re.sub(pattern, "__value__", sentence)
 
- 
+    
     return processed_sentence, unknown_words
 
 def preprocess(sentence):
@@ -281,19 +282,38 @@ def build_filter_clause(tree, unknown_words, table):
     Returns:
         where_clause (string): WHERE clause for the SQL query
     """
-    filter_node = find_subtree(tree, "FilterClause")
+    filter_node = find_subtree(tree, "FilterStatement")
+
     where = ""
     if filter_node:
-        if find_subtree(filter_node, "Filter"):
-            det_col_tree = find_subtree(tree, "DetCol")
-            col = find_subtree(det_col_tree, "Col")
+        where = " WHERE "
+        idx = 0
+        for node in filter_node:
+            if find_subtree(node, "DetCol"):
+                det_col_tree = find_subtree(node, "DetCol")
+                col = find_subtree(det_col_tree, "Col")
 
-            column_info = get_column_types(table)
+                column_info = get_column_types(table)
 
-            if column_is_number(column_info[col.leaves()[0]]):
-                where = " WHERE " + col.leaves()[0] + " = " + unknown_words[0]
-            else:
-                where = " WHERE LOWER(" + col.leaves()[0] + ") = '" + " ".join(unknown_words) + "'"
+                if column_is_number(column_info[col.leaves()[0]]):
+                    where += col.leaves()[0] + " = " + unknown_words[idx]
+                else:
+                    where += "LOWER(" + col.leaves()[0] + ") = '" + (unknown_words[idx]) + "'"
+                idx+=1
+
+            elif find_subtree(node, "Conj"):
+                where += " AND "
+
+        # if find_subtree(filter_node, "Filter"):
+        #     det_col_tree = find_subtree(tree, "DetCol")
+        #     col = find_subtree(det_col_tree, "Col")
+
+        #     column_info = get_column_types(table)
+
+        #     if column_is_number(column_info[col.leaves()[0]]):
+        #         where = " WHERE " + col.leaves()[0] + " = " + unknown_words[0]
+        #     else:
+        #         where = " WHERE LOWER(" + col.leaves()[0] + ") = '" + " ".join(unknown_words) + "'"
 
     return where
 
