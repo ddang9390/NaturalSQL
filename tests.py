@@ -7,7 +7,8 @@ TEST_TABLE = "movies"
 GOOD_SENTENCES = [
     "show me the name of movies",
     "list the name and genre from movies",
-    "give me the year, director, and genre in movies"
+    "give me the year, director, and genre in movies",
+    "show me the movies"
 ]
 
 # Sentences that should fail to parse
@@ -24,7 +25,8 @@ SELECT_ALL_SENTENCES = [
     "give me everything in the table",
     "show me all of the movies",
     "show me the entire table",
-    "let me see everything"
+    "let me see everything",
+    "show me the movies"
 ]
 
 SELECT_FROM_COLUMNS_SENTENCES = {
@@ -53,7 +55,7 @@ WHERE_SENTENCES = {
     "show me all of movies where the year is 2008": f"SELECT * FROM {TEST_TABLE} WHERE year = 2008;",
 
     # Handling SELECT * with WHERE clause
-    "show me the movie where the name is \"Shrek\"": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
+    "show me the movies where the name is \"Shrek\"": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(name) = 'shrek';",
 }
 
 

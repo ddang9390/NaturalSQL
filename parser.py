@@ -5,7 +5,7 @@ from database import *
 
 NONTERMINALS = """
 S -> VP NP | VP NP FilterClause | FilterClause | AllStatement
-NP -> ColList | ColList P Table | AllStatement
+NP -> ColList | ColList P TableRef | AllStatement | TableRef 
 VP -> V |  V Det | V Det V
 
 ColList ->  MainCol | MainCol Conj DetCol
@@ -16,7 +16,10 @@ MainCol -> DetCol | DetCol Punc MainCol | Conj DetCol
 # Column with words like 'the' in front of it
 DetCol -> Col | Det Col
 
-AllStatement -> All | All P Det Table | All P Table | Det All Table | VP All | V Det Table | VP All P Det Table | VP Det All Table
+# Table references
+TableRef -> Table | Det Table
+
+AllStatement -> All | All P Det TableRef | All P TableRef | Det All TableRef | VP All | V Det Table | VP All P Det Table | VP Det All Table | Det Table
 
 FilterClause -> Filter | Filter NP | Filter DetCol IsVal
 IsVal -> V ValPlaceholder
@@ -216,6 +219,15 @@ def extract_cols_from_sentence(tree, true_vocab):
     return cols
 
 def extract_table_from_sentence(tree):
+    """
+    Helper function for finding the table from a sentence
+
+    Argument:
+        tree: Parse tree that reporesentsa sentence in a tree of grammar nodes
+
+    Returns:
+        table: Name of the table
+    """
     table = find_subtree(tree, "Table").leaves()[0]
     return table
 
