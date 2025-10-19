@@ -119,9 +119,7 @@ def extract_search_value(sentence):
     pattern = r'["\']([^"\']+)["\']'
     processed_sentence = re.sub(pattern, "__value__", sentence)
 
-    print(unknown_words)
-    print(sentence)
-    print(processed_sentence)
+ 
     return processed_sentence, unknown_words
 
 def preprocess(sentence):

@@ -1,0 +1,114 @@
+/* body {
+    margin: 50px auto;
+    padding: 20px;
+}
+
+input {
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 16px;
+} */
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+.container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-section {
+    margin-bottom: 30px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #555;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.output-section {
+    margin-top: 30px;
+}
+
+.sql-query-box {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-left: 4px solid #4CAF50;
+    margin-bottom: 20px;
+    font-family: 'Courier New', monospace;
+}
+
+
+.sql-results-display {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.sql-results-display th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.sql-results-display td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.sql-results-display tr:hover {
+    background-color: #f5f5f5;
+}
+
+h3 {
+    color: #333;
+    margin-bottom: 10px;
+}

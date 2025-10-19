@@ -1,26 +1,32 @@
 <head>
     <title>Natural SQL</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
-    <div class="input-section">
-        <form method="POST" action="/query">
-            <input type="text" placeholder="Enter a sentence" value="{{user_input}}" id="user_input" name="user_input">
-            <button class="btn btn-primary">Submit</button>
-        </form>
-    </div>
-
-    <div class="output-section">
-        <div class="sql-query-display">
-            <h3>Generated SQL Query</h3>
-            <div class="sql-query-box">
-                {{query}}
-            </div>
+    <div class="container">
+        <h1>Natural SQL</h1>
+        <div class="input-section">
+            <form method="POST" action="/query">
+                <label for="user_input">Enter your query in plain English:</label>
+                <input type="text" placeholder="Ex. Show me the year of the movie where the name is &quot;Shrek&quot;"
+                    value="{{user_input}}" id="user_input" name="user_input" required>
+                <button class="btn btn-primary">Submit</button>
+            </form>
         </div>
 
-        <div class="sql-results-display">
-            {{sql_results | safe}}
+
+        <div class="output-section">
+            <div class="sql-query-display">
+                <h3>Generated SQL Query</h3>
+                <div class="sql-query-box">
+                    {{query}}
+                </div>
+            </div>
+
+            <div class="sql-results-display">
+                {{sql_results | safe}}
+            </div>
         </div>
     </div>
 </body>
