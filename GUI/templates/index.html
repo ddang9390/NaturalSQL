@@ -4,18 +4,33 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container input-section">
         <h1>Natural SQL</h1>
-        <div class="input-section">
-            <form method="POST" action="/query">
-                <label for="user_input">Enter your query in plain English:</label>
-                <input type="text" placeholder="Ex. Show me the year of the movie where the name is &quot;Shrek&quot;"
-                    value="{{user_input}}" id="user_input" name="user_input" required>
-                <button class="btn btn-primary">Submit</button>
-            </form>
+
+        <form method="POST" action="/query">
+            <label for="user_input">Enter your query in plain English:</label>
+            <input type="text" placeholder="Ex. Show me the year of the movie where the name is &quot;Shrek&quot;"
+                value="{{user_input}}" id="user_input" name="user_input" required>
+            <button class="btn btn-primary">Submit</button>
+        </form>
+        <div class="example-queries">
+            <h3>Try these examples:</h3>
+            <ul>
+                <li onclick="fillExample('show me all movies')">• Show me all movies</li>
+                <li onclick="fillExample('list the names and directors of the movies')">• List the names and directors
+                    of the movies
+                </li>
+                <li onclick="fillExample('show me movies where genre is Action')">• Show me movies where genre is
+                    Action</li>
+                <li onclick="fillExample('give me the year and name of movies')">• Give me the year and name of
+                    movies</li>
+            </ul>
         </div>
+    </div>
 
+    <div id="loading"></div>
 
+    <div class="container">
         <div class="output-section">
             <div class="sql-query-display">
                 <h3>Generated SQL Query</h3>
@@ -29,4 +44,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function fillExample(query) {
+            document.getElementById('user_input').value = query;
+
+        }
+
+    </script>
 </body>

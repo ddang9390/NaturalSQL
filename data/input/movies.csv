@@ -1,0 +1,31 @@
+name,year,genre,director,rating,runtime
+The Dark Knight,2008,Action,Christopher Nolan,9.00,152.00
+The Dark Knight Rises,2012,Action,Christopher Nolan,8.40,164.00
+Inception,2010,Sci-Fi,Christopher Nolan,8.80,148.00
+Interstellar,2014,Sci-Fi,Christopher Nolan,8.60,169.00
+The Shawshank Redemption,1994,Drama,Frank Darabont,9.30,142.00
+The Godfather,1972,Crime,Francis Ford Coppola,9.20,175.00
+The Godfather Part II,1974,Crime,Francis Ford Coppola,9.00,202.00
+Pulp Fiction,1994,Crime,Quentin Tarantino,8.90,154.00
+The Matrix,1999,Sci-Fi,Lana Wachowski,8.70,136.00
+Forrest Gump,1994,Drama,Robert Zemeckis,8.80,142.00
+Fight Club,1999,Drama,David Fincher,8.80,139.00
+The Lord of the Rings: The Return of the King,2003,Fantasy,Peter Jackson,9.00,201.00
+The Lord of the Rings: The Fellowship of the Ring,2001,Fantasy,Peter Jackson,8.80,178.00
+The Lord of the Rings: The Two Towers,2002,Fantasy,Peter Jackson,8.80,179.00
+Star Wars: Episode V - The Empire Strikes Back,1980,Sci-Fi,Irvin Kershner,8.70,124.00
+Goodfellas,1990,Crime,Martin Scorsese,8.70,145.00
+The Silence of the Lambs,1991,Thriller,Jonathan Demme,8.60,118.00
+Saving Private Ryan,1998,War,Steven Spielberg,8.60,169.00
+Schindler's List,1993,Drama,Steven Spielberg,9.00,195.00
+The Prestige,2006,Mystery,Christopher Nolan,8.50,130.00
+Gladiator,2000,Action,Ridley Scott,8.50,155.00
+The Departed,2006,Crime,Martin Scorsese,8.50,151.00
+Whiplash,2014,Drama,Damien Chazelle,8.50,106.00
+Parasite,2019,Thriller,Bong Joon-ho,8.50,132.00
+Avengers: Endgame,2019,Action,Anthony Russo,8.40,181.00
+Spider-Man: Into the Spider-Verse,2018,Animation,Bob Persichetti,8.40,117.00
+Coco,2017,Animation,Lee Unkrich,8.40,105.00
+The Lion King,1994,Animation,Roger Allers,8.50,88.00
+Toy Story,1995,Animation,John Lasseter,8.30,81.00
+Shrek,2001,Animation,Andrew Adamson,7.90,90.00

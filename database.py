@@ -1,3 +1,4 @@
+import csv
 import sqlite3
 import pandas as pd
 
@@ -5,6 +6,7 @@ DB_DIR = "data"
 DB_NAME = "test_movies.db"
 DB_PATH = DB_DIR + "/" + DB_NAME
 
+INPUT = "data/input/movies.csv"
 
 def set_up_table():
     """
@@ -12,23 +14,35 @@ def set_up_table():
     """
     con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
+
+    table_name = "movies"
+    sql = f"DROP TABLE IF EXISTS {table_name}"
+
+    # Execute the SQL query
+    cur.execute(sql)
+
     cur.execute("""
                 CREATE TABLE IF NOT EXISTS movies(
-                    id INTEGER PRIMARY KEY,
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
                     year INTEGER,
                     genre TEXT,
-                    director TEXT 
+                    director TEXT,
+                    rating FLOAT,
+                    runtime FLOAT
                 )
                 """)
 
-    sample_movies = [
-        (1, "The Dark Knight", 2008, "Action", "Chirstopher Nolan"),
-        (2, "The Dark Knight Rises", 2012, "Action", "Chirstopher Nolan"),
-        (3, "Shrek", 2001, "Comedy", "Andrew Adamson")
-    ]
+    contents = csv.reader(open(INPUT))
+    
+    cur.executemany("INSERT INTO movies (name, year, genre, director, rating, runtime) VALUES(?, ?, ?, ?, ?, ?)", contents)
 
-    cur.executemany("INSERT INTO movies VALUES(?, ?, ?, ?, ?)", sample_movies)
+    select_all = "SELECT * FROM movies"
+    rows = cur.execute(select_all).fetchall()
+
+    # Output to the console screen
+    for r in rows:
+        print(r)
 
     con.commit()
     con.close()

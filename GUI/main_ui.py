@@ -15,13 +15,16 @@ def index():
 @app.route("/query", methods=["POST"])
 def taking_question():
     user_input = request.form.get('user_input')
-    query = process(user_input)
-
     sql_results = ""
-    if query:
-        query, sql_results = execute_query(query)
-    else:
-        query = "Invalid input"
+    query = ""
+
+    if user_input:
+        query = process(user_input)
+        
+        if query:
+            query, sql_results = execute_query(query)
+        else:
+            query = "Invalid input"
 
     return render_template(
         'index.html',
