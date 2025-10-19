@@ -44,7 +44,7 @@ VALID_VOCABULARY = {
         'V': ["show", "list", "give", "what", "let", "see", "who", "is"],
         'Det': ["a", "an", "me", "my", "the", "are"],
         'P': ["at", "before", "in", "of", "on", "to", "from"],
-        'Conj': ["and", "until"],
+        'Conj': ["and", "until", "or"],
         'Punc': [","],
 
         'All': ["everything", "all", "entire"],
@@ -302,7 +302,7 @@ def build_filter_clause(tree, unknown_words, table):
                 idx+=1
 
             elif find_subtree(node, "Conj"):
-                where += " AND "
+                where += " " + node[0].upper() + " "
 
         # if find_subtree(filter_node, "Filter"):
         #     det_col_tree = find_subtree(tree, "DetCol")
