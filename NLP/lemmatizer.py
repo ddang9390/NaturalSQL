@@ -1,4 +1,3 @@
-import nltk
 from fuzzywuzzy import fuzz
 from nltk.stem import WordNetLemmatizer
 

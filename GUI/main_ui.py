@@ -1,11 +1,12 @@
 from flask import *
-from database import *
-from parser import process
+from data.database import *
+from NLP.parser import process
 
 app = Flask(__name__)
 
-
-def run_ui():
+parser = None
+def run_ui(p):
+    parser = p
     app.run(port=5000)
 
 @app.route("/")

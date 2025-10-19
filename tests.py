@@ -1,5 +1,5 @@
 import unittest
-from parser import preprocess, process
+from NLP.parser import preprocess, process
 
 TEST_TABLE = "movies"
 

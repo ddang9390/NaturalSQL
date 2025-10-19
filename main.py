@@ -1,5 +1,5 @@
-from database import *
-from parser import *
+from data.db_utils import *
+from NLP.parser import *
 from GUI.main_ui import *
 
 def taking_question():
@@ -26,7 +26,8 @@ def main():
     print("--".join(key for key in schema.keys()))
 
     #taking_question()
-    run_ui()
+    parser = init_parser()
+    run_ui(parser)
     print("Ending program")
 
 
