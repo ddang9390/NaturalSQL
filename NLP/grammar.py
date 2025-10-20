@@ -1,5 +1,5 @@
 NONTERMINALS = """
-S -> VP NP | VP NP FilterStatement | FilterStatement | AllStatement
+S -> VP NP | VP NP FilterStatement | FilterStatement | AllStatement | VP NP OrderClause | VP NP FilterStatement OrderClause
 NP -> ColList | ColList P TableRef | AllStatement | TableRef 
 VP -> V |  V Det | V Det V
 
@@ -14,11 +14,13 @@ DetCol -> Col | Det Col
 # Table references
 TableRef -> Table | Det Table
 
-AllStatement -> All | All P Det TableRef | All P TableRef | Det All TableRef | VP All | V Det Table | VP All P Det Table | VP Det All Table | Det Table
+AllStatement -> All | All P Det TableRef | All P TableRef | Det All TableRef | VP All | V Det Table | VP All P Det Table | VP Det All Table | Det Table | All TableRef
 
 FilterStatement -> FilterClause | FilterClause Conj FilterClause 
 FilterClause -> Filter | Filter NP | Filter DetCol IsVal | DetCol IsVal
 IsVal -> V ValPlaceholder
+
+OrderClause -> Order OrderP DetCol | Order OrderP DetCol OrderDir | Order OrderP DetCol OrderDir | Order OrderP DetCol OrderDir Order | Order OrderP DetCol OrderP OrderDir Order 
 """
 
 TERMINALS = """
@@ -32,6 +34,10 @@ All -> "everything" | "all" | "entire"
 Filter -> "where" | "with" | "for"
 
 ValPlaceholder -> "__value__"
+
+Order -> "order" | "ordered" | "sort" | "sorted"
+OrderDir -> "ascending" | "asc" | "descending" | "desc"
+OrderP -> "by" | "from" | "in"
 """
 
 # For lemmatization purposes
@@ -45,4 +51,8 @@ VALID_VOCABULARY = {
         'All': ["everything", "all", "entire"],
         'Filter' : ["where", "with", "for"],
         'ValPlaceholder' : ["__value__"],
+
+        'Order': ["order" , "ordered" , "sort", "sorted"],
+        'OrderDir' : ["ascending" , "asc" , "descending" , "desc"],
+        'OrderP': ["by", "from", "in"],
 }

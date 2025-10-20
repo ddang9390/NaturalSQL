@@ -1,7 +1,8 @@
 import unittest
-from NLP.parser import preprocess, process
+from NLP.parser import preprocess, process, init_parser
 
 TEST_TABLE = "movies"
+parser = init_parser()
 
 # Sentences that should parse correctly
 GOOD_SENTENCES = [
@@ -65,6 +66,13 @@ WHERE_SENTENCES = {
 }
 
 
+ORDER_BY_SENTENCES = {
+    "show me movies sorted by year": "SELECT * FROM movies ORDER BY year;",
+    "list name and genre ordered by name desc": "SELECT name, genre FROM movies ORDER BY name DESC;",
+    "list name and genre ordered by name in descending order": "SELECT name, genre FROM movies ORDER BY name DESC;",
+    "show all movies where genre is 'Action' order by year asc": "SELECT * FROM movies WHERE genre = 'Action' ORDER BY year ASC;",
+    "show all movies where genre is 'Action' order by the year in ascending order": "SELECT * FROM movies WHERE genre = 'Action' ORDER BY year ASC;"
+}
 
 class Tests(unittest.TestCase):
     def test_preprocess_success(self):
@@ -112,7 +120,7 @@ class Tests(unittest.TestCase):
         total = 0
         expected_query = f"SELECT * FROM {TEST_TABLE};"
         for sentence in SELECT_ALL_SENTENCES:
-            query = process(sentence, TEST_TABLE)
+            query = process(sentence, parser, TEST_TABLE)
             if query == expected_query:
                 total += 1
                 print("Translated Statement: ", query)
@@ -134,7 +142,7 @@ class Tests(unittest.TestCase):
 
         for sentence in SELECT_FROM_COLUMNS_SENTENCES.keys():
             expected_query = SELECT_FROM_COLUMNS_SENTENCES[sentence]
-            query = process(sentence, TEST_TABLE)
+            query = process(sentence, parser, TEST_TABLE)
             if query == expected_query:
                 total += 1
                 print("Translated Statement: ", query)
@@ -159,7 +167,7 @@ class Tests(unittest.TestCase):
 
         for sentence in SIMILAR_SOUNDING_SENTENCES.keys():
             expected_query = SIMILAR_SOUNDING_SENTENCES[sentence]
-            query = process(sentence, TEST_TABLE)
+            query = process(sentence, parser, TEST_TABLE)
             if query == expected_query:
                 total += 1
                 print("Translated Statement: ", query)
@@ -183,7 +191,7 @@ class Tests(unittest.TestCase):
 
         for sentence in WHERE_SENTENCES.keys():
             expected_query = WHERE_SENTENCES[sentence]
-            query = process(sentence, TEST_TABLE)
+            query = process(sentence, parser, TEST_TABLE)
             if query == expected_query:
                 total += 1
                 print("Translated Statement: ", query)
@@ -196,6 +204,30 @@ class Tests(unittest.TestCase):
         print("Test complete")
         print("--------------\n")
         self.assertEqual(total, len(WHERE_SENTENCES))
+
+    def test_process_ORDER_BY_clause(self):
+        """
+        Test to make sure that a ORDER BY clause could be made
+        """
+        print()
+        print("Testing generating queries with ORDER BY clause")
+        total = 0
+
+        for sentence in ORDER_BY_SENTENCES.keys():
+            expected_query = ORDER_BY_SENTENCES[sentence]
+            query = process(sentence, parser, TEST_TABLE)
+            if query == expected_query:
+                total += 1
+                print("Translated Statement: ", query)
+            else:
+                print("Expected:", expected_query)
+                print("Actual:", query)
+                print("PROBLEM SENTENCE: ", sentence)
+                print()
+                
+        print("Test complete")
+        print("--------------\n")
+        self.assertEqual(total, len(ORDER_BY_SENTENCES))
 
 
 if __name__ == "__main__":
