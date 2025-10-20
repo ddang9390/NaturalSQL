@@ -70,8 +70,8 @@ ORDER_BY_SENTENCES = {
     "show me movies sorted by year": "SELECT * FROM movies ORDER BY year;",
     "list name and genre ordered by name desc": "SELECT name, genre FROM movies ORDER BY name DESC;",
     "list name and genre ordered by name in descending order": "SELECT name, genre FROM movies ORDER BY name DESC;",
-    "show all movies where genre is 'Action' order by year asc": "SELECT * FROM movies WHERE genre = 'Action' ORDER BY year ASC;",
-    "show all movies where genre is 'Action' order by the year in ascending order": "SELECT * FROM movies WHERE genre = 'Action' ORDER BY year ASC;"
+    "show all movies where genre is \"Action\" order by year asc": "SELECT * FROM movies WHERE LOWER(genre) = 'action' ORDER BY year ASC;",
+    "show all movies where genre is 'Action' order by the year in ascending order": "SELECT * FROM movies WHERE LOWER(genre) = 'action' ORDER BY year ASC;"
 }
 
 class Tests(unittest.TestCase):

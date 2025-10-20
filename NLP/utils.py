@@ -13,10 +13,9 @@ def extract_search_value(sentence):
         processed_sentence (string): Sentence with search value replaced with placeholder
         unknown_words (list): List of unknown words
     """
-    unknown_words = re.findall(r'"(.+?)"', sentence)
     pattern = r'["\']([^"\']+)["\']'
+    unknown_words = re.findall(pattern, sentence)
     processed_sentence = re.sub(pattern, "__value__", sentence)
-
     
     return processed_sentence, unknown_words
 
