@@ -1,7 +1,10 @@
 NONTERMINALS = """
-S -> VP NP | VP NP FilterStatement | FilterStatement | AllStatement | VP NP OrderClause | VP NP FilterStatement OrderClause
+S -> VP NP | VP NP FilterStatement | FilterStatement | AllStatement 
+S -> VP NP OrderClause | VP NP FilterStatement OrderClause | VP NP OrderClause LimitClause | VP NP FilterStatement OrderClause LimitClause  
+S -> VP NP FilterStatement LimitClause | VP LimitClause | VP LimitClause OrderClause
+
 NP -> ColList | ColList P TableRef | AllStatement | TableRef 
-VP -> V |  V Det | V Det V
+VP -> V |  V Det | V Det V | V Det Det | V VP
 
 ColList ->  MainCol | MainCol Conj DetCol
 
@@ -20,7 +23,11 @@ FilterStatement -> FilterClause | FilterClause Conj FilterClause
 FilterClause -> Filter | Filter NP | Filter DetCol IsVal | DetCol IsVal
 IsVal -> V ValPlaceholder
 
-OrderClause -> Order OrderP DetCol | Order OrderP DetCol OrderDir | Order OrderP DetCol OrderDir | Order OrderP DetCol OrderDir Order | Order OrderP DetCol OrderP OrderDir Order 
+OrderClause -> Order OrderP DetCol | Order OrderP DetCol OrderDir | Order OrderP DetCol OrderDir  
+OrderClause -> Order OrderP DetCol OrderDir Order | Order OrderP DetCol OrderP OrderDir Order | OrderP DetCol
+
+LimitClause -> Limit | Limit ValPlaceholder | Limit TableRef | ValPlaceholder TableRef | Limit ValPlaceholder TableRef
+LimitClause -> Det Limit ValPlaceholder TableRef
 """
 
 TERMINALS = """
@@ -38,6 +45,8 @@ ValPlaceholder -> "__value__"
 Order -> "order" | "ordered" | "sort" | "sorted"
 OrderDir -> "ascending" | "asc" | "descending" | "desc"
 OrderP -> "by" | "from" | "in"
+
+Limit -> "best" | "top" | "worst" | "bottom" | "limit" | "just"
 """
 
 # For lemmatization purposes
@@ -55,4 +64,6 @@ VALID_VOCABULARY = {
         'Order': ["order" , "ordered" , "sort", "sorted"],
         'OrderDir' : ["ascending" , "asc" , "descending" , "desc"],
         'OrderP': ["by", "from", "in"],
+
+        'Limit': ["best", "top", "worst", "bottom", "limit", "just"]
 }

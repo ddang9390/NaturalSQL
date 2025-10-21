@@ -74,6 +74,30 @@ ORDER_BY_SENTENCES = {
     "show all movies where genre is 'Action' order by the year in ascending order": "SELECT * FROM movies WHERE LOWER(genre) = 'action' ORDER BY year ASC;"
 }
 
+LIMIT_SENTENCES = {    
+    "show me 5 movies": f"SELECT * FROM {TEST_TABLE} LIMIT 5;",
+    "show me the name and year for 5 movies": f"SELECT name, year FROM {TEST_TABLE} LIMIT 5;",
+
+
+    # Implied order by (will have to show first column in table for this case)
+    "show me the top 5 movies": f"SELECT * FROM {TEST_TABLE} ORDER BY name DESC LIMIT 5;",
+    "list the bottom 3 movies": f"SELECT * FROM {TEST_TABLE} ORDER BY name ASC LIMIT 3;",
+    "what is the top movie": f"SELECT * FROM {TEST_TABLE} ORDER BY name DESC LIMIT 1;",
+    "show me the worst movie": f"SELECT * FROM {TEST_TABLE} ORDER BY name ASC LIMIT 1;",
+
+
+    # With explicit order by
+    "list the top 5 movies by name": f"SELECT * FROM {TEST_TABLE} ORDER BY name ASC LIMIT 5;", 
+    "show me the top 3 movies ordered by year descending": f"SELECT * FROM {TEST_TABLE} ORDER BY year DESC LIMIT 3;",
+    "give me 5 movies sorted by genre": f"SELECT * FROM {TEST_TABLE} ORDER BY genre ASC LIMIT 5;",
+
+
+    # Combining WHERE, ORDER BY, and LIMIT
+    "show me the top 2 movies where genre is 'Action'": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(genre) = 'action' ORDER BY year DESC LIMIT 2;",
+    "list name and year from movies where director is 'Christopher Nolan' order by year desc limit 1": f"SELECT name, year FROM {TEST_TABLE} WHERE LOWER(director) = 'christopher nolan' ORDER BY year DESC LIMIT 1;",
+    "show me the bottom 2 movies with genre 'Action'": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(genre) = 'action' ORDER BY year ASC LIMIT 2;"
+}
+
 class Tests(unittest.TestCase):
     def test_preprocess_success(self):
         """
@@ -228,6 +252,30 @@ class Tests(unittest.TestCase):
         print("Test complete")
         print("--------------\n")
         self.assertEqual(total, len(ORDER_BY_SENTENCES))
+
+    def test_process_LIMIT_clause(self):
+        """
+        Test to make sure that a LIMIT clause could be made
+        """
+        print()
+        print("Testing generating queries with LIMIT clause")
+        total = 0
+
+        for sentence in LIMIT_SENTENCES.keys():
+            expected_query = LIMIT_SENTENCES[sentence]
+            query = process(sentence, parser, TEST_TABLE)
+            if query == expected_query:
+                total += 1
+                print("Translated Statement: ", query)
+            else:
+                print("Expected:", expected_query)
+                print("Actual:", query)
+                print("PROBLEM SENTENCE: ", sentence)
+                print()
+                
+        print("Test complete")
+        print("--------------\n")
+        self.assertEqual(total, len(LIMIT_SENTENCES))
 
 
 if __name__ == "__main__":
