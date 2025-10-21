@@ -1,7 +1,7 @@
 from NLP.utils import *
 from data.db_utils import *
 
-def translate_to_sql(trees, unknown_words, true_vocab, table=""):
+def translate_to_sql(trees, unknown_words, true_vocab, numbers, table=""):
     """
     Translates a natural language sentence into an SQL query for a table
 
@@ -16,15 +16,19 @@ def translate_to_sql(trees, unknown_words, true_vocab, table=""):
                 Else, a blank string
     """
     first_tree = trees[0]
-
+    where_nums, lim_nums = split_numbers_by_context(first_tree, numbers)
+    print(where_nums)
+    print(lim_nums)
     if table == "":
         table = extract_table_from_sentence(first_tree)
+
     where = build_filter_clause(first_tree, unknown_words, table)
     order = build_order_by_clause(first_tree)
+    limit = build_limit_clause(first_tree, lim_nums)
 
     # Starting with identifying SELECT *
     if find_subtree(first_tree, "AllStatement"):
-        return f"SELECT * FROM {table}{where}{order};"
+        return f"SELECT * FROM {table}{where}{order}{limit};"
     
     elif find_subtree(first_tree, "ColList"):
         cols = []
@@ -38,7 +42,9 @@ def translate_to_sql(trees, unknown_words, true_vocab, table=""):
             return ""
         
         cols_str = ", ".join(cols)
-        return f"SELECT {cols_str} FROM {table}{where}{order};"
+        return f"SELECT {cols_str} FROM {table}{where}{order}{limit};"
+    elif find_subtree(first_tree, "LimitClause"):
+        return f"SELECT * FROM {table}{where}{order}{limit};"
     
     return ""
 
@@ -55,7 +61,6 @@ def build_filter_clause(tree, unknown_words, table):
         where (string): WHERE clause for the SQL query
     """
     filter_node = find_subtree(tree, "FilterStatement")
-
     where = ""
     if filter_node:
         where = " WHERE "
@@ -76,7 +81,8 @@ def build_filter_clause(tree, unknown_words, table):
 
             elif find_subtree(node, "Conj"):
                 where += " " + node[0].upper() + " "
-
+        if where == " WHERE ":
+            where = ""
 
     return where
 
@@ -115,3 +121,27 @@ def build_order_by_clause(tree):
             order = ""
 
     return order
+
+def build_limit_clause(tree, lim_nums):
+    """
+    Builds the ORDER BY clause for the translated
+    SQL query
+
+    Argument:
+        tree: Parse tree that reporesents a sentence in a tree of grammar nodes
+
+    Returns:
+        order (string): ORDER BY clause for the SQL query
+    """
+    filter_node = find_subtree(tree, "LimitClause")
+
+    limit = ""
+    if filter_node:
+        num = find_subtree(tree, "NumPlaceholder")
+        if num:
+            limit = " LIMIT " + (lim_nums[0])
+        else:
+            limit = " LIMIT 1"
+
+
+    return limit

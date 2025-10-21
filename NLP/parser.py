@@ -41,7 +41,7 @@ def process(sentence, parser, table=""):
                 parsed or translated properly
     """
     # Convert input into list of words
-    s, unknown_words, true_vocab = preprocess(sentence)
+    s, unknown_words, true_vocab, numbers = preprocess(sentence)
 
     # Attempt to parse sentence
     try:
@@ -54,7 +54,7 @@ def process(sentence, parser, table=""):
         print("Could not parse sentence.")
         return ""
 
-    return translate_to_sql(trees, unknown_words, true_vocab, table)
+    return translate_to_sql(trees, unknown_words, true_vocab, numbers, table)
 
 
 
@@ -92,14 +92,20 @@ def preprocess(sentence):
     
     processed_tokens = []
 
+    
+
+    numbers = []
     for token in resolved_tokens:
         if token in known_words:
             processed_tokens.append(token)
+        elif token.isnumeric():
+            numbers.append(token)
+            processed_tokens.append("__num__")
         else:
             processed_tokens.append("__value__")
             unknown_words.append(token)
 
-    return processed_tokens, unknown_words, true_vocab
+    return processed_tokens, unknown_words, true_vocab, numbers
 
 
 

@@ -26,8 +26,8 @@ IsVal -> V ValPlaceholder
 OrderClause -> Order OrderP DetCol | Order OrderP DetCol OrderDir | Order OrderP DetCol OrderDir  
 OrderClause -> Order OrderP DetCol OrderDir Order | Order OrderP DetCol OrderP OrderDir Order | OrderP DetCol
 
-LimitClause -> Limit | Limit ValPlaceholder | Limit TableRef | ValPlaceholder TableRef | Limit ValPlaceholder TableRef
-LimitClause -> Det Limit ValPlaceholder TableRef
+LimitClause -> Limit | Limit NumPlaceholder | Limit TableRef | NumPlaceholder TableRef | Limit NumPlaceholder TableRef
+LimitClause -> Det Limit NumPlaceholder TableRef
 """
 
 TERMINALS = """
@@ -41,6 +41,7 @@ All -> "everything" | "all" | "entire"
 Filter -> "where" | "with" | "for"
 
 ValPlaceholder -> "__value__"
+NumPlaceholder -> "__num__"
 
 Order -> "order" | "ordered" | "sort" | "sorted"
 OrderDir -> "ascending" | "asc" | "descending" | "desc"
@@ -60,6 +61,7 @@ VALID_VOCABULARY = {
         'All': ["everything", "all", "entire"],
         'Filter' : ["where", "with", "for"],
         'ValPlaceholder' : ["__value__"],
+        'NumPlaceholder' : ["__num__"],
 
         'Order': ["order" , "ordered" , "sort", "sorted"],
         'OrderDir' : ["ascending" , "asc" , "descending" , "desc"],

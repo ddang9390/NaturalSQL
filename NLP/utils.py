@@ -26,7 +26,7 @@ def find_subtree(tree, label):
     This would help identify what SQL statement the sentence is looking for
 
     Arguments:
-        tree: The tree being searched through
+        tree: tree: Parse tree that reporesents a sentence in a tree of grammar nodes
         label: The label we are looking for
 
     Returns:
@@ -44,7 +44,7 @@ def extract_cols_from_sentence(tree, true_vocab):
     Helper function for finding columns from a sentence
 
     Argument:
-        tree: Parse tree that reporesentsa sentence in a tree of grammar nodes
+        tree: Parse tree that reporesents a sentence in a tree of grammar nodes
 
     Returns:
         list: List of columns found
@@ -64,10 +64,43 @@ def extract_table_from_sentence(tree):
     Helper function for finding the table from a sentence
 
     Argument:
-        tree: Parse tree that reporesentsa sentence in a tree of grammar nodes
+        tree: Parse tree that reporesents a sentence in a tree of grammar nodes
 
     Returns:
         table: Name of the table
     """
     table = find_subtree(tree, "Table").leaves()[0]
     return table
+
+
+def split_numbers_by_context(tree, numbers):
+    """
+    Split numbers into WHERE clause numbers and LIMIT clause numbers
+    based on their position in the parse tree
+    
+    Arguments:
+        tree: Parse tree that reporesents a sentence in a tree of grammar nodes
+        numbers (list): All numbers extracted from query
+    
+    Returns:
+        where_numbers (list): Numbers that were in WHERE clauses
+        lim_numbers (list): Number that was in the LIMIT clause
+    """
+    where_numbers = []
+    lim_numbers = []
+
+    if not numbers:
+        return where_numbers, lim_numbers
+
+    idx = 0
+    for subtree in tree.subtrees():
+        if subtree.label() == 'FilterStatement':
+            for sub in subtree.subtrees():
+                if sub.label == 'NumPlaceholder':
+                    where_numbers.append(numbers[idx])
+                    idx += 1
+        if subtree.label() == 'LimitClause':
+            lim_numbers.append(numbers[idx])
+            idx += 1
+
+    return where_numbers, lim_numbers

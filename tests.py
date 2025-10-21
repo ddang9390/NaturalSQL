@@ -75,15 +75,14 @@ ORDER_BY_SENTENCES = {
 }
 
 LIMIT_SENTENCES = {    
-    "show me 5 movies": f"SELECT * FROM {TEST_TABLE} LIMIT 5;",
+    "show me 15 movies": f"SELECT * FROM {TEST_TABLE} LIMIT 15;",
     "show me the name and year for 5 movies": f"SELECT name, year FROM {TEST_TABLE} LIMIT 5;",
 
-
-    # Implied order by (will have to show first column in table for this case)
-    "show me the top 5 movies": f"SELECT * FROM {TEST_TABLE} ORDER BY name DESC LIMIT 5;",
-    "list the bottom 3 movies": f"SELECT * FROM {TEST_TABLE} ORDER BY name ASC LIMIT 3;",
-    "what is the top movie": f"SELECT * FROM {TEST_TABLE} ORDER BY name DESC LIMIT 1;",
-    "show me the worst movie": f"SELECT * FROM {TEST_TABLE} ORDER BY name ASC LIMIT 1;",
+    # Implied order by, column can't be determined
+    "show me the top 5 movies": f"SELECT * FROM {TEST_TABLE} LIMIT 5;",
+    "list the bottom 3 movies": f"SELECT * FROM {TEST_TABLE} LIMIT 3;",
+    "what is the top movie": f"SELECT * FROM {TEST_TABLE} LIMIT 1;",
+    "show me the worst movie": f"SELECT * FROM {TEST_TABLE} LIMIT 1;",
 
 
     # With explicit order by
@@ -95,7 +94,8 @@ LIMIT_SENTENCES = {
     # Combining WHERE, ORDER BY, and LIMIT
     "show me the top 2 movies where genre is 'Action'": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(genre) = 'action' ORDER BY year DESC LIMIT 2;",
     "list name and year from movies where director is 'Christopher Nolan' order by year desc limit 1": f"SELECT name, year FROM {TEST_TABLE} WHERE LOWER(director) = 'christopher nolan' ORDER BY year DESC LIMIT 1;",
-    "show me the bottom 2 movies with genre 'Action'": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(genre) = 'action' ORDER BY year ASC LIMIT 2;"
+    "show me the bottom 2 movies with genre 'Action'": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(genre) = 'action' ORDER BY year ASC LIMIT 2;",
+    "show me the top 2 movies where year is 2008": f"SELECT * FROM {TEST_TABLE} WHERE year = 2008 ORDER BY year DESC LIMIT 2;",
 }
 
 class Tests(unittest.TestCase):
