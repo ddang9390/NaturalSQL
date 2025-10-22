@@ -93,10 +93,11 @@ def split_numbers_by_context(tree, numbers):
         return where_numbers, lim_numbers
 
     idx = 0
+
     for subtree in tree.subtrees():
-        if subtree.label() == 'FilterStatement':
+        if subtree.label() == 'FilterClause':
             for sub in subtree.subtrees():
-                if sub.label == 'NumPlaceholder':
+                if sub.label() == 'IsNum':
                     where_numbers.append(numbers[idx])
                     idx += 1
         if subtree.label() == 'LimitClause':

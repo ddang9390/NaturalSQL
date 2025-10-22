@@ -88,7 +88,7 @@ LIMIT_SENTENCES = {
     # With explicit order by
     "list the top 5 movies by name": f"SELECT * FROM {TEST_TABLE} ORDER BY name ASC LIMIT 5;", 
     "show me the top 3 movies ordered by year descending": f"SELECT * FROM {TEST_TABLE} ORDER BY year DESC LIMIT 3;",
-    "give me 5 movies sorted by genre": f"SELECT * FROM {TEST_TABLE} ORDER BY genre ASC LIMIT 5;",
+    "give me 5 movies sorted by genre": f"SELECT * FROM {TEST_TABLE} ORDER BY genre LIMIT 5;",
 
 
     # Combining WHERE, ORDER BY, and LIMIT

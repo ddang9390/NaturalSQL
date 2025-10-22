@@ -20,8 +20,9 @@ TableRef -> Table | Det Table
 AllStatement -> All | All P Det TableRef | All P TableRef | Det All TableRef | VP All | V Det Table | VP All P Det Table | VP Det All Table | Det Table | All TableRef
 
 FilterStatement -> FilterClause | FilterClause Conj FilterClause 
-FilterClause -> Filter | Filter NP | Filter DetCol IsVal | DetCol IsVal
+FilterClause -> Filter | Filter NP | Filter DetCol IsVal | DetCol IsVal | Filter DetCol IsNum | DetCol IsNum
 IsVal -> V ValPlaceholder
+IsNum -> V NumPlaceholder
 
 OrderClause -> Order OrderP DetCol | Order OrderP DetCol OrderDir | Order OrderP DetCol OrderDir  
 OrderClause -> Order OrderP DetCol OrderDir Order | Order OrderP DetCol OrderP OrderDir Order | OrderP DetCol

@@ -17,12 +17,11 @@ def translate_to_sql(trees, unknown_words, true_vocab, numbers, table=""):
     """
     first_tree = trees[0]
     where_nums, lim_nums = split_numbers_by_context(first_tree, numbers)
-    print(where_nums)
-    print(lim_nums)
+
     if table == "":
         table = extract_table_from_sentence(first_tree)
 
-    where = build_filter_clause(first_tree, unknown_words, table)
+    where = build_filter_clause(first_tree, unknown_words, where_nums, table)
     order = build_order_by_clause(first_tree)
     limit = build_limit_clause(first_tree, lim_nums)
 
@@ -48,7 +47,7 @@ def translate_to_sql(trees, unknown_words, true_vocab, numbers, table=""):
     
     return ""
 
-def build_filter_clause(tree, unknown_words, table):
+def build_filter_clause(tree, unknown_words, where_nums, table):
     """
     Builds the WHERE and FOR clauses for the translated
     SQL query
@@ -64,20 +63,19 @@ def build_filter_clause(tree, unknown_words, table):
     where = ""
     if filter_node:
         where = " WHERE "
-        idx = 0
+        word_idx = 0
+        num_idx = 0
         for node in filter_node:
             if find_subtree(node, "DetCol"):
                 det_col_tree = find_subtree(node, "DetCol")
                 col = find_subtree(det_col_tree, "Col")
 
-                column_info = get_column_types(table)
-
                 if find_subtree(node, "IsVal"):
-                    if column_is_number(column_info[col.leaves()[0]]):
-                        where += col.leaves()[0] + " = " + unknown_words[idx]
-                    else:
-                        where += "LOWER(" + col.leaves()[0] + ") = '" + (unknown_words[idx]) + "'"
-                    idx+=1
+                    where += "LOWER(" + col.leaves()[0] + ") = '" + (unknown_words[word_idx]) + "'"
+                    word_idx+=1
+                    
+                if find_subtree(node, "IsNum"):
+                     where += col.leaves()[0] + " = " + where_nums[num_idx]
 
             elif find_subtree(node, "Conj"):
                 where += " " + node[0].upper() + " "
