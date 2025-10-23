@@ -45,9 +45,12 @@ def extract_cols_from_sentence(tree, true_vocab):
 
     Argument:
         tree: Parse tree that reporesents a sentence in a tree of grammar nodes
+        true_vocab (dict): Dictionary containing the vocab from the grammar file
+                           that was then extended using the names of the table
+                           and columns
 
     Returns:
-        list: List of columns found
+        cols (list): List of columns found
     """
     cols = []
     for subtree in tree.subtrees():

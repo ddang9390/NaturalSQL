@@ -26,8 +26,8 @@ def main():
     print("--".join(key for key in schema.keys()))
 
     #taking_question()
-    parser = init_parser()
-    run_ui(parser)
+    main_ui = MainGUI(parser= init_parser())
+    main_ui.run_ui()
     print("Ending program")
 
 

@@ -10,6 +10,11 @@ def translate_to_sql(trees, unknown_words, true_vocab, numbers, table=""):
                       tree of grammar nodes
         unknown_words (list): List of words that may be names of values for
                               WHERE clause
+        true_vocab (dict): Dictionary containing the vocab from the grammar file
+                           that was then extended using the names of the table
+                           and columns
+        numbers (list): List of numbers that were extracted from the sentence
+        table (string): Name of the table
 
     Return:
         string: The resulting SQL statement if able to translate the sentence
@@ -55,6 +60,8 @@ def build_filter_clause(tree, unknown_words, where_nums, table):
     Argument:
         tree: Parse tree that reporesents a sentence in a tree of grammar nodes
         unknown_words (list): List of unknown words
+        where_nums (list): List of numbers that were used in WHERE clauses
+        table (string): Name of the table
 
     Returns:
         where (string): WHERE clause for the SQL query
@@ -122,14 +129,15 @@ def build_order_by_clause(tree):
 
 def build_limit_clause(tree, lim_nums):
     """
-    Builds the ORDER BY clause for the translated
+    Builds the LIMIT clause for the translated
     SQL query
 
     Argument:
         tree: Parse tree that reporesents a sentence in a tree of grammar nodes
+        lim_nums (list): List of numbers that were used in LIMIT clauses
 
     Returns:
-        order (string): ORDER BY clause for the SQL query
+        limit (string): LIMIT clause for the SQL query
     """
     filter_node = find_subtree(tree, "LimitClause")
 

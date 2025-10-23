@@ -4,35 +4,42 @@ from NLP.parser import process
 
 app = Flask(__name__)
 
-parser = None
-def run_ui(p):
-    parser = p
-    app.run(port=5000)
+class MainGUI:
+    def __init__(self, parser):
+        self.parser = parser
 
-@app.route("/")
-def index():
-    return render_template('index.html')
-
-@app.route("/query", methods=["GET", "POST"])
-def taking_question():
-    if request.method == "GET":
-        return redirect(url_for('index'))
-
-    user_input = request.form.get('user_input')
-    sql_results = ""
-    query = ""
-
-    if user_input:
-        query = process(user_input)
+        app.add_url_rule('/', 'index', self.index)
+        app.add_url_rule('/query', 'taking_question', self.taking_question, methods=['GET', 'POST'])
         
-        if query:
-            query, sql_results = execute_query(query)
-        else:
-            query = "Invalid input"
+    def run_ui(self):
+        app.run(port=5000)
 
-    return render_template(
-        'index.html',
-        user_input = user_input,
-        query = query,
-        sql_results = sql_results,
-    )
+
+    def index(self):
+        return render_template('index.html')
+
+
+    def taking_question(self):
+        if request.method == "GET":
+            return redirect(url_for('index'))
+
+        user_input = request.form.get('user_input')
+        sql_results = ""
+        query = ""
+
+        if user_input:
+            print("gg")
+            print(self.parser)
+            query = process(user_input, self.parser)
+            
+            if query:
+                query, sql_results = execute_query(query)
+            else:
+                query = "Invalid input"
+
+        return render_template(
+            'index.html',
+            user_input = user_input,
+            query = query,
+            sql_results = sql_results,
+        )

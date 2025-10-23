@@ -3,15 +3,12 @@ from NLP.lemmatizer import *
 from NLP.grammar import *
 from NLP.sql_translator import *
 
-
-
 def init_parser():
     """
     Initiates the parser so that it can handle our current static grammar
     along with dynamic table and column names
 
     Returns:
-        grammar
         parser
     """
     column_names, table_names = get_column_and_tablenames()
@@ -33,6 +30,7 @@ def process(sentence, parser, table=""):
 
     Arguments:
         sentence (string): Natural language sentence from user
+        parser (ChartParser): Parser that will be parsing the sentence 
         table (string): Name of the table being queried
 
     Returns:
@@ -62,18 +60,21 @@ def preprocess(sentence):
     """
     Convert `sentence` to a list of its words.
     Pre-process sentence by converting all characters to lowercase
-    and removing any word that does not contain at least one alphabetic
-    character.
-
+    and matching similar looking words to what is in our grammar.
+    Unidentified words are replaced with placeholders
+    
     Arguments:
         sentence (string): A sentence written in natural language
 
     Returns:
         processed_tokens (list): List of words in preprocessed sentence
         unknown_words (list): List of unknown words
+        true_vocab (dict): Dictionary containing the vocab from the grammar file
+                           that was then extended using the names of the table
+                           and columns
+        numbers (list): List of numbers that were extracted from the sentence
     """
     sent_parsing, unknown_words = extract_search_value(sentence.lower())
-    # sent_parsing = sentence.lower()
     tokens = nltk.word_tokenize(sent_parsing)
 
     column_names, table_names = get_column_and_tablenames()
@@ -91,8 +92,6 @@ def preprocess(sentence):
     resolved_tokens = resolve_tokens(lemmatized_tokens, true_vocab)
     
     processed_tokens = []
-
-    
 
     numbers = []
     for token in resolved_tokens:
