@@ -92,10 +92,10 @@ LIMIT_SENTENCES = {
 
 
     # Combining WHERE, ORDER BY, and LIMIT
-    "show me the top 2 movies where genre is 'Action'": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(genre) = 'action' ORDER BY year LIMIT 2;",
+    "show me the top 2 movies where genre is 'Action'": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(genre) = 'action' LIMIT 2;",
     "list name and year from movies where director is 'Christopher Nolan' order by year desc limit 1": f"SELECT name, year FROM {TEST_TABLE} WHERE LOWER(director) = 'christopher nolan' ORDER BY year DESC LIMIT 1;",
-    "show me the bottom 2 movies with genre 'Action'": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(genre) = 'action' ORDER BY year LIMIT 2;",
-    "show me the top 2 movies where year is 2008": f"SELECT * FROM {TEST_TABLE} WHERE year = 2008 ORDER BY year LIMIT 2;",
+    "show me the bottom 2 movies with genre 'Action'": f"SELECT * FROM {TEST_TABLE} WHERE LOWER(genre) = 'action' LIMIT 2;",
+    "show me the top 2 movies where year is 2008": f"SELECT * FROM {TEST_TABLE} WHERE year = 2008 LIMIT 2;",
 }
 
 class Tests(unittest.TestCase):

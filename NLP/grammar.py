@@ -1,7 +1,7 @@
 NONTERMINALS = """
 S -> VP NP | VP NP FilterStatement | FilterStatement | AllStatement 
 S -> VP NP OrderClause | VP NP FilterStatement OrderClause | VP NP OrderClause LimitClause | VP NP FilterStatement OrderClause LimitClause  
-S -> VP NP FilterStatement LimitClause | VP LimitClause | VP LimitClause OrderClause
+S -> VP NP FilterStatement LimitClause | VP LimitClause | VP LimitClause OrderClause | VP LimitClause FilterStatement
 
 NP -> ColList | ColList P TableRef | AllStatement | TableRef 
 VP -> V |  V Det | V Det V | V Det Det | V VP
@@ -21,8 +21,8 @@ AllStatement -> All | All P Det TableRef | All P TableRef | Det All TableRef | V
 
 FilterStatement -> FilterClause | FilterClause Conj FilterClause 
 FilterClause -> Filter | Filter NP | Filter DetCol IsVal | DetCol IsVal | Filter DetCol IsNum | DetCol IsNum
-IsVal -> V ValPlaceholder
-IsNum -> V NumPlaceholder
+IsVal -> V ValPlaceholder | ValPlaceholder
+IsNum -> V NumPlaceholder | NumPlaceholder
 
 OrderClause -> Order OrderP DetCol | Order OrderP DetCol OrderDir | Order OrderP DetCol OrderDir  
 OrderClause -> Order OrderP DetCol OrderDir Order | Order OrderP DetCol OrderP OrderDir Order | OrderP DetCol

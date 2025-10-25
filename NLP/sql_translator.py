@@ -21,6 +21,7 @@ def translate_to_sql(trees, unknown_words, true_vocab, numbers, table=""):
                 Else, a blank string
     """
     first_tree = trees[0]
+
     where_nums, lim_nums = split_numbers_by_context(first_tree, numbers)
 
     if table == "":
@@ -37,7 +38,7 @@ def translate_to_sql(trees, unknown_words, true_vocab, numbers, table=""):
     elif find_subtree(first_tree, "ColList"):
         cols = []
         existing = set()
-        for col in extract_cols_from_sentence(first_tree, true_vocab):
+        for col in extract_cols_from_sentence(find_subtree(first_tree, "ColList"), true_vocab):
             if col not in existing:
                 existing.add(col)
                 cols.append(col)
