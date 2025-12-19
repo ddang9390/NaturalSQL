@@ -8,6 +8,19 @@
         <h1>Natural SQL</h1>
 
         <form method="POST" action="/query">
+            <div class="db-selection">
+                <div class="db-select-group">
+                    <label>Database:</label>
+                    <select name="database" id='database' onchange="updateTables()">
+                        {% for db in available_dbs %}
+                        <option values="{{db}}">
+                            {{db}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
             <label for="user_input">Enter your query in plain English:</label>
             <input type="text" placeholder="Ex. Show me the year of the movie where the name is &quot;Shrek&quot;"
                 value="{{user_input}}" id="user_input" name="user_input" required>
@@ -52,8 +65,16 @@
     </div>
 
     <script>
+        // For filling in the query box using the selected example
         function fillExample(query) {
             document.getElementById('user_input').value = query;
+        }
+
+        // For updating the table dropdown using the selected database
+        function updateTables() {
+            const db = document.getElementById('database').value
+
+            // TODO - implement table dropdown and populate it
         }
     </script>
 </body>

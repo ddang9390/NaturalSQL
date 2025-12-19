@@ -2,6 +2,7 @@ import csv
 import sqlite3
 import pandas as pd
 
+# TODO - remove db_name, make it more dynamic
 DB_DIR = "data"
 DB_NAME = "test_movies.db"
 DB_PATH = DB_DIR + "/" + DB_NAME

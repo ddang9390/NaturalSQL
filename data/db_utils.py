@@ -1,5 +1,6 @@
 import sqlite3
-from data.database import DB_PATH
+import os
+from data.database import DB_PATH, DB_DIR
 
 def get_column_and_tablenames():
     """
@@ -82,3 +83,33 @@ def get_schema_info():
 
     con.close()
     return schema
+
+def get_available_dbs():
+    """
+    Get list of db files in data directory
+
+    Returns:
+        lst: List of db files
+    """
+    if not os.path.exists(DB_DIR):
+        os.mkdir(DB_DIR)
+        return []
+    
+    dbs = []
+    for file in os.listdir(DB_DIR):
+        if file.endswith('.db'):
+            dbs.append(file)
+
+    return dbs
+
+def get_db_path(db):
+    """
+    Get full path to database file
+
+    Argument:
+        db (string): Name of the database file
+
+    Returns:
+        string: Path to database file
+    """
+    return os.path.join(DB_DIR, db)
