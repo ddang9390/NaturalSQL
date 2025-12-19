@@ -8,6 +8,9 @@ app = Flask(__name__)
 class MainGUI:
     def __init__(self, parser):
         self.parser = parser
+        self.dbs = None
+        self.tables = None
+        self.current_db = None
 
         app.add_url_rule('/', 'index', self.index)
         app.add_url_rule('/query', 'taking_question', self.taking_question, methods=['GET', 'POST'])
@@ -20,17 +23,17 @@ class MainGUI:
         """
         Display the homepage
         """
-        dbs = get_available_dbs()
+        self.dbs = get_available_dbs()
 
-        current_db = session.get('db', dbs[0])
+        self.current_db = session.get('db', self.dbs[0])
 
-        schema = get_schema_info(current_db)
-        tables = list(schema.keys())
+        schema = get_schema_info(self.current_db)
+        self.tables = list(schema.keys())
 
         return render_template('index.html',
-                               available_dbs = dbs,
-                               available_tables = tables,
-                               selected_db = current_db,
+                               available_dbs = self.dbs,
+                               available_tables = self.tables,
+                               selected_db = self.current_db,
                                selected_table = session.get('table', 'auto'))
 
 
@@ -59,6 +62,10 @@ class MainGUI:
             user_input = user_input,
             query = query,
             sql_results = sql_results,
+            available_dbs = self.dbs,
+            available_tables = self.tables,
+            selected_db = self.current_db,
+            selected_table = session.get('table', 'auto')
         )
     
     @app.route("/get_tables/<db>")
