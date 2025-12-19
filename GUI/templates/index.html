@@ -19,6 +19,17 @@
                         {% endfor %}
                     </select>
                 </div>
+
+                <div class="db-select-group">
+                    <label>Table:</label>
+                    <select name="table" id='table'>
+                        {% for table in available_tables %}
+                        <option values="{{table}}">
+                            {{table}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
 
             <label for="user_input">Enter your query in plain English:</label>
@@ -74,7 +85,19 @@
         function updateTables() {
             const db = document.getElementById('database').value
 
-            // TODO - implement table dropdown and populate it
+            fetch(`/get_tables/${db}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tableSelect = document.getElementById('table');
+                    tableSelect.innerHTML = '<option></option>'
+
+                    data.tables.forEach(table => {
+                        const option = document.createElement('option');
+                        option.value = table;
+                        option.textContent = table;
+                        tableSelect.appendChild(option);
+                    });
+                });
         }
     </script>
 </body>

@@ -24,10 +24,14 @@ class MainGUI:
 
         current_db = session.get('db', dbs[0])
 
+        schema = get_schema_info(current_db)
+        tables = list(schema.keys())
 
         return render_template('index.html',
                                available_dbs = dbs,
-                               selected_db = current_db)
+                               available_tables = tables,
+                               selected_db = current_db,
+                               selected_table = session.get('table', 'auto'))
 
 
     def taking_question(self):
@@ -60,7 +64,7 @@ class MainGUI:
     @app.route("/get_tables/<db>")
     def get_tables(db):
         try:
-            schema = get_schema_info()
+            schema = get_schema_info(db)
             tables = list(schema.keys())
 
             return jsonify({'tables': tables})

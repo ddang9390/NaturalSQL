@@ -58,16 +58,22 @@ def column_is_number(column_type):
     return column_type.upper() in numeric_types
 
 
-def get_schema_info():
+def get_schema_info(db_path=None):
     """
     Connects to a database and returns its schema info
 
+    Argument:
+        db_path (string): Path to the database file
     Returns:
         dict: A dictionary where the keys are the table names and the
               values are the table's columns
     """
     schema = {}
-    con = sqlite3.connect(DB_PATH)
+    if db_path:
+        path = DB_DIR + "/" + db_path
+        con = sqlite3.connect(path)
+    else:
+        con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
 
     query = "SELECT name FROM sqlite_master WHERE type='table';"
