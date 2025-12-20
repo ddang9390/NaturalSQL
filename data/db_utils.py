@@ -2,15 +2,18 @@ import sqlite3
 import os
 from data.database import DB_PATH, DB_DIR
 
-def get_column_and_tablenames():
+def get_column_and_tablenames(db_path=DB_PATH):
     """
     Retrieve the names of all tables and columns from the database
+
+    Argument:
+        db_path (string): Path to the database file
 
     Returns:
         column_names (list): List of all column names
         table_names (list): List of all table names
     """
-    schema = get_schema_info()
+    schema = get_schema_info(db_path)
     column_names = set()
     table_names = set(schema.keys())
 
@@ -21,17 +24,18 @@ def get_column_and_tablenames():
     return list(column_names), list(table_names)
 
 
-def get_column_types(table):
+def get_column_types(table, db_path=DB_PATH):
     """
     Retrieves the types of the columns in the table
 
     Argument:
         table (String): name of the table
+        db_path (string): Path to the database file
 
     Returns:
         dict: Dictionary mapping column names to their types
     """
-    con = sqlite3.connect(DB_PATH)
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
 
     column_types = {}
@@ -58,22 +62,20 @@ def column_is_number(column_type):
     return column_type.upper() in numeric_types
 
 
-def get_schema_info(db_path=None):
+def get_schema_info(db_path=DB_PATH):
     """
     Connects to a database and returns its schema info
 
     Argument:
         db_path (string): Path to the database file
+
     Returns:
         dict: A dictionary where the keys are the table names and the
               values are the table's columns
     """
     schema = {}
-    if db_path:
-        path = DB_DIR + "/" + db_path
-        con = sqlite3.connect(path)
-    else:
-        con = sqlite3.connect(DB_PATH)
+
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
 
     query = "SELECT name FROM sqlite_master WHERE type='table';"

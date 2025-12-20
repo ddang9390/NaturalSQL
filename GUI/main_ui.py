@@ -26,8 +26,9 @@ class MainGUI:
         self.dbs = get_available_dbs()
 
         self.current_db = session.get('db', self.dbs[0])
+        path = DB_DIR + "/" + self.current_db
+        schema = get_schema_info(path)
 
-        schema = get_schema_info(self.current_db)
         self.tables = list(schema.keys())
 
         return render_template('index.html',
@@ -49,11 +50,14 @@ class MainGUI:
         query = ""
 
         if user_input:
-            print(self.parser)
+            print("--------")
+            print(user_input)
+            print("--------")
             query = process(user_input, self.parser)
             
             if query:
-                query, sql_results = execute_query(query)
+                path = DB_DIR + "/" + self.current_db
+                query, sql_results = execute_query(query, path)
             else:
                 query = "Invalid input"
 

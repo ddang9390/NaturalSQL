@@ -50,7 +50,7 @@ def set_up_table():
     print("Database", DB_NAME, " has been created and populated")
 
 
-def execute_query(query):
+def execute_query(query, db_path=DB_PATH):
     """
     Connects to database and executes the query generated from
     translating the user's sentence. Displays the results of the
@@ -58,9 +58,10 @@ def execute_query(query):
 
     Argument:
         query (string): The generated query
+        db_path (string): Path to the database file
     """
-    con = sqlite3.connect(DB_PATH)
-    print(DB_PATH)
+    con = sqlite3.connect(db_path)
+
     results = pd.read_sql_query(query, con)
     con.close()
 
