@@ -51,6 +51,11 @@ def process(sentence, parser, table=""):
     if not trees:
         print("Could not parse sentence.")
         return ""
+    
+    # TODO - Find way to use selected table if table couldn't be extracted from user input
+    if not table:
+        print("Could not find table")
+        return ""
 
     return translate_to_sql(trees, unknown_words, true_vocab, numbers, table)
 

@@ -72,7 +72,12 @@ def extract_table_from_sentence(tree):
     Returns:
         table: Name of the table
     """
-    table = find_subtree(tree, "Table").leaves()[0]
+    table_tree = find_subtree(tree, "Table")
+    table = ""
+    
+    if table_tree:
+        table = table_tree.leaves()[0]
+
     return table
 
 
