@@ -1,7 +1,7 @@
 # NaturalSQL
 This project translates a natural language statement inputted by the user into an SQL query through Natural Language Processing
 
-
+![](demo.gif)
 
 <details>
     <summary>Table of Contents</summary>
@@ -26,7 +26,9 @@ Python 3.7+
 git clone https://github.com/ddang9390/NaturalSQL.git
 2. Navigate to the project directory  
 cd NaturalSQL
-3. Run the main file  
+3. Install the requirements   
+pip install -r requirements.txt 
+4. Run the main file  
 python3 main.py
 
 ## How it Works
