@@ -13,7 +13,7 @@
                     <label>Database:</label>
                     <select name="database" id='database' onchange="updateTables()">
                         {% for db in available_dbs %}
-                        <option values="{{db}}">
+                        <option value="{{db}}" {% if db==selected_database %}selected{% endif %}>
                             {{db}}
                         </option>
                         {% endfor %}
@@ -24,7 +24,7 @@
                     <label>Table:</label>
                     <select name="table" id='table'>
                         {% for table in available_tables %}
-                        <option values="{{table}}">
+                        <option value="{{table}}" {% if table==selected_table %}selected{% endif %}>
                             {{table}}
                         </option>
                         {% endfor %}

@@ -52,6 +52,9 @@ def process(sentence, parser, table=""):
         print("Could not parse sentence.")
         return ""
     
+    if table == "":
+        table = extract_table_from_sentence(trees[0])
+
     # TODO - Find way to use selected table if table couldn't be extracted from user input
     if not table:
         print("Could not find table")

@@ -35,7 +35,7 @@ class MainGUI:
                                available_dbs = self.dbs,
                                available_tables = self.tables,
                                selected_db = self.current_db,
-                               selected_table = session.get('table', 'auto'))
+                               selected_table = request.form.get('table'))
 
 
     def taking_question(self):
@@ -69,7 +69,7 @@ class MainGUI:
             available_dbs = self.dbs,
             available_tables = self.tables,
             selected_db = self.current_db,
-            selected_table = session.get('table', 'auto')
+            selected_table = request.form.get('table')
         )
     
     @app.route("/get_tables/<db>")
